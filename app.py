@@ -3,6 +3,7 @@
 from flask import Flask, render_template, jsonify
 import yfinance as yf
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -91,8 +92,8 @@ def get_portfolio_data():
         "chart": {
             "dates":     chart_dates,
             "portfolio": port_norm.tolist(),
-            "nifty":     nifty_norm.fillna("null").tolist(),
-            "sp500":     sp500_norm.fillna("null").tolist(),
+            "nifty":     nifty_norm.apply(lambda x: None if (isinstance(x, float) and (x != x)) else x).tolist(),
+            "sp500":     sp500_norm.apply(lambda x: None if (isinstance(x, float) and (x != x)) else x).tolist(),
         }
     }
 
