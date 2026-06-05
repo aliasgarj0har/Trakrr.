@@ -1,214 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Trackrr</title>
+  <title>Trackrr.</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237c3aed'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='600' font-size='18' fill='white'>T</text></svg>"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1a;
+      --border: #1a1a2e;
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+      --purple-dim: #3b0764;
+      --green: #4ade80;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --muted: #6b6b9a;
+      --faint: #2a2a3e;
+    }
+    html { scroll-behavior: smooth; }
     body {
-      background: #080810;
-      color: #c4b5fd;
+      background: var(--bg);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       min-height: 100vh;
-      padding: 36px 48px;
+      padding: 0;
     }
 
-    /* NAV */
-    nav {
+    /* ── NAVBAR ── */
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 48px;
+      padding: 20px 48px;
+      border-bottom: 0.5px solid var(--border);
+      background: rgba(7,7,15,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
     }
-    .logo { font-size: 22px; font-weight: 500; color: #fff; letter-spacing: -0.5px; }
-    .logo span { color: #7c3aed; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--purple);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: #fff;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+    .logo-text { font-size: 18px; font-weight: 500; color: #fff; letter-spacing: -0.3px; }
+    .logo-text span { color: var(--purple); }
     .nav-right { display: flex; align-items: center; gap: 20px; }
     .live-pill {
       display: flex; align-items: center; gap: 7px;
-      font-size: 11px; color: #4ade80;
+      font-size: 11px; color: var(--green);
       letter-spacing: 0.8px; text-transform: uppercase;
+      background: rgba(74,222,128,0.07);
+      padding: 5px 12px; border-radius: 20px;
+      border: 0.5px solid rgba(74,222,128,0.2);
     }
     .pulse {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #4ade80;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
       animation: pulse 1.5s infinite;
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    .market-time { font-size: 12px; color: #3d3d5c; }
+    .delay-tag { font-size: 11px; color: var(--muted); }
 
-    /* HERO */
-    .hero { margin-bottom: 36px; padding-bottom: 32px; border-bottom: 0.5px solid #12122a; }
-    .section-label {
-      font-size: 10px; color: #3d3d5c;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      margin-bottom: 10px;
+    /* ── REFRESH BTN ── */
+    .refresh-btn {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; color: var(--purple-light);
+      border: 0.5px solid var(--purple-dim);
+      background: rgba(124,58,237,0.08);
+      padding: 7px 16px; border-radius: 8px;
+      cursor: pointer; letter-spacing: 0.2px;
+      transition: all 0.2s;
     }
-    .hero-value { font-size: 48px; font-weight: 500; color: #fff; letter-spacing: -2px; margin-bottom: 6px; }
-    .hero-sub { font-size: 14px; }
-    .red { color: #e05555; }
-    .grn { color: #4ade80; }
-    .pur { color: #a78bfa; }
+    .refresh-btn:hover { background: rgba(124,58,237,0.18); border-color: var(--purple); }
+    .refresh-btn:active { transform: scale(0.97); }
+    .refresh-btn svg { transition: transform 0.5s; }
+    .refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* KPI ROW */
+    /* ── MAIN ── */
+    .main { padding: 40px 48px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero { margin-bottom: 40px; }
+    .hero-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+    .hero-value { font-size: 52px; font-weight: 500; color: #fff; letter-spacing: -2px; margin-bottom: 8px; line-height: 1; }
+    .hero-sub { font-size: 14px; color: var(--muted); }
+    .hero-sub.red { color: var(--red); }
+    .hero-sub.grn { color: var(--green); }
+
+    /* ── KPI ROW ── */
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
-      background: #12122a;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 36px;
-    }
-    .kpi { background: #080810; padding: 20px 22px; }
-    .kpi-label {
-      font-size: 10px; color: #3d3d5c;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      margin-bottom: 8px;
-    }
-    .kpi-val { font-size: 20px; font-weight: 500; }
-
-    /* CHART */
-    .chart-wrap {
-      background: #0d0d1a;
-      border: 0.5px solid #12122a;
+      background: var(--border);
       border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 36px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      border: 0.5px solid var(--border);
+    }
+    .kpi {
+      background: var(--surface);
+      padding: 22px 24px;
+      transition: background 0.2s;
+    }
+    .kpi:hover { background: var(--faint); }
+    .kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+    .kpi-val { font-size: 22px; font-weight: 500; }
+    .kpi-val.red { color: var(--red); }
+    .kpi-val.grn { color: var(--green); }
+    .kpi-val.pur { color: var(--purple-light); }
+
+    /* ── CHART ── */
+    .chart-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 28px 20px;
+      margin-bottom: 32px;
     }
     .chart-header {
       display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 20px;
+      align-items: flex-start; margin-bottom: 24px;
     }
-    .chart-title { font-size: 13px; color: #6b6b9a; }
-    .legend { display: flex; gap: 16px; }
-    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #3d3d5c; }
-    .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .chart-title { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .chart-subtitle { font-size: 11px; color: #3d3d5c; }
+    .legend { display: flex; gap: 20px; align-items: center; }
+    .leg-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+    .leg-line { width: 20px; height: 2px; border-radius: 1px; }
+    .leg-dashed { width: 20px; height: 0; border-top: 2px dashed; border-radius: 1px; }
 
-    /* TABLE */
-    .accent-line { width: 28px; height: 2px; background: #7c3aed; border-radius: 1px; margin-bottom: 10px; }
-    .table-wrap { overflow-x: auto; }
+    /* ── TABLE ── */
+    .table-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .accent-line { width: 3px; height: 18px; background: var(--purple); border-radius: 2px; }
+    .section-title { font-size: 13px; color: var(--text); font-weight: 500; }
+    .table-wrap {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
     table { width: 100%; border-collapse: collapse; }
     th {
-      font-size: 10px; color: #3d3d5c; font-weight: 400;
-      text-align: left; padding: 0 0 14px;
-      border-bottom: 0.5px solid #12122a;
+      font-size: 10px; color: var(--muted); font-weight: 400;
+      text-align: left; padding: 14px 20px;
+      border-bottom: 0.5px solid var(--border);
       letter-spacing: 0.5px; text-transform: uppercase;
+      background: rgba(14,14,26,0.8);
     }
     th:not(:first-child) { text-align: right; }
     td {
-      padding: 15px 0;
-      border-bottom: 0.5px solid #0d0d1f;
-      font-size: 13px; color: #6b6b9a;
+      padding: 16px 20px;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px; color: var(--muted);
       vertical-align: middle;
+      transition: background 0.15s;
     }
     td:not(:first-child) { text-align: right; }
     tr:last-child td { border-bottom: none; }
-    .ticker { font-size: 13px; font-weight: 500; color: #c4b5fd; }
-    .co-name { font-size: 11px; color: #3d3d5c; margin-top: 2px; }
-    .bar { height: 2px; background: #12122a; border-radius: 1px; width: 56px; margin-left: auto; margin-top: 6px; }
-    .bar-fill { height: 2px; border-radius: 1px; background: #7c3aed; }
+    tr:hover td { background: var(--faint); }
+    .ticker { font-size: 13px; font-weight: 500; color: var(--purple-light); }
+    .co-name { font-size: 11px; color: #3d3d5c; margin-top: 3px; }
+    .red { color: var(--red); }
+    .grn { color: var(--green); }
+    .weight-bar { height: 3px; background: var(--border); border-radius: 2px; width: 64px; margin-left: auto; margin-top: 5px; }
+    .weight-fill { height: 3px; border-radius: 2px; background: var(--purple); }
 
-    /* FOOTER */
-    footer {
-      margin-top: 32px;
+    /* ── FOOTER ── */
+    .footer {
       display: flex; justify-content: space-between; align-items: center;
-      padding-top: 20px; border-top: 0.5px solid #12122a;
+      padding: 20px 48px;
+      border-top: 0.5px solid var(--border);
+      margin-top: 40px;
     }
     .footer-left { font-size: 11px; color: #3d3d5c; }
-    .refresh-btn {
-      font-size: 11px; color: #a78bfa;
-      border: 0.5px solid #3b0764; background: transparent;
-      padding: 7px 16px; border-radius: 8px;
-      cursor: pointer; letter-spacing: 0.3px;
-      transition: background 0.2s;
-    }
-    .refresh-btn:hover { background: #12122a; }
+    .footer-right { font-size: 11px; color: #3d3d5c; }
 
-    /* LOADING / ERROR */
-    .state-msg {
-      text-align: center; padding: 80px 0;
-      font-size: 13px; color: #3d3d5c;
-    }
-    #error-msg { display: none; color: #e05555; text-align: center; padding: 16px; font-size: 13px; }
+    /* ── LOADING ── */
+    .loading-row { text-align: center; padding: 40px; font-size: 13px; color: #3d3d5c; }
+    #error-msg { display: none; color: var(--red); text-align: center; padding: 16px; font-size: 13px; }
   </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">Trackrr<span>.</span></div>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo-wrap">
+    <div class="logo-icon">T</div>
+    <div class="logo-text">Trackrr<span>.</span></div>
+  </div>
   <div class="nav-right">
     <div class="live-pill"><div class="pulse"></div>Live</div>
-    <div class="market-time" id="market-time">NSE · 15 min delay</div>
+    <div class="delay-tag">NSE · 15 min delay</div>
+    <button class="refresh-btn" id="refresh-btn" onclick="handleRefresh()">
+      <svg id="refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+      </svg>
+      Refresh
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="section-label">Portfolio value</div>
-  <div class="hero-value" id="end-val">—</div>
-  <div class="hero-sub" id="hero-sub">Loading...</div>
-</div>
+<!-- MAIN -->
+<div class="main">
 
-<!-- KPI ROW -->
-<div class="kpi-row">
-  <div class="kpi">
-    <div class="kpi-label">vs Nifty 50</div>
-    <div class="kpi-val" id="alpha">—</div>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">Portfolio value</div>
+    <div class="hero-value" id="end-val">—</div>
+    <div class="hero-sub" id="hero-sub">Loading live data...</div>
   </div>
-  <div class="kpi">
-    <div class="kpi-label">Sharpe ratio</div>
-    <div class="kpi-val pur" id="sharpe">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Best day</div>
-    <div class="kpi-val grn" id="best-day">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Worst day</div>
-    <div class="kpi-val red" id="worst-day">—</div>
-  </div>
-</div>
 
-<!-- CHART -->
-<div class="chart-wrap">
-  <div class="chart-header">
-    <div class="chart-title">Portfolio vs Nifty 50 — indexed to 100</div>
-    <div class="legend">
-      <div class="leg-item"><div class="leg-dot" style="background:#7c3aed"></div>Portfolio</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#4ade80"></div>Nifty 50</div>
+  <!-- KPI ROW -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">vs Nifty 50</div>
+      <div class="kpi-val" id="alpha">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Sharpe ratio</div>
+      <div class="kpi-val pur" id="sharpe">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Best day</div>
+      <div class="kpi-val grn" id="best-day">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Worst day</div>
+      <div class="kpi-val red" id="worst-day">—</div>
     </div>
   </div>
-  <canvas id="perfChart" height="90"></canvas>
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Performance — indexed to 100</div>
+        <div class="chart-subtitle">6-month rolling window · 15 min delay</div>
+      </div>
+      <div class="legend">
+        <div class="leg-item">
+          <div class="leg-line" style="background:#7c3aed"></div>
+          Portfolio
+        </div>
+        <div class="leg-item">
+          <div class="leg-dashed" style="border-color:#4ade80"></div>
+          Nifty 50
+        </div>
+        <div class="leg-item">
+          <div class="leg-dashed" style="border-color:#60a5fa"></div>
+          S&amp;P 500
+        </div>
+      </div>
+    </div>
+    <canvas id="perfChart" height="70"></canvas>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-header">
+    <div class="accent-line"></div>
+    <div class="section-title">Holdings</div>
+  </div>
+  <div id="error-msg"></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Today</th>
+          <th>Return</th>
+          <th>Value</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody id="holdings-body">
+        <tr><td colspan="6" class="loading-row">Fetching live data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
-<!-- TABLE -->
-<div class="accent-line"></div>
-<div class="section-label">Holdings</div>
-<div id="error-msg"></div>
-<div class="table-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>Stock</th>
-        <th>Price</th>
-        <th>Today</th>
-        <th>Return</th>
-        <th>Value</th>
-        <th>Weight</th>
-      </tr>
-    </thead>
-    <tbody id="holdings-body">
-      <tr><td colspan="6" class="state-msg">Fetching live data...</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<footer>
+<!-- FOOTER -->
+<footer class="footer">
   <div class="footer-left" id="updated-at">—</div>
-  <button class="refresh-btn" onclick="fetchData()">Refresh now</button>
+  <div class="footer-right">Data via Yahoo Finance · Built with Python & Flask</div>
 </footer>
 
 <script>
@@ -217,38 +308,46 @@
   function fmt(n) {
     return '₹' + Number(n).toLocaleString('en-IN');
   }
-
   function sign(n) {
-    return n >= 0 ? '+' + n.toFixed(2) + '%' : n.toFixed(2) + '%';
+    return (n >= 0 ? '+' : '') + Number(n).toFixed(2) + '%';
   }
-
   function colorClass(n) {
     return n >= 0 ? 'grn' : 'red';
   }
 
-  function renderChart(chartData) {
+  function renderChart(d) {
     const ctx = document.getElementById('perfChart').getContext('2d');
     if (chart) chart.destroy();
     chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: chartData.dates,
+        labels: d.dates,
         datasets: [
           {
             label: 'Portfolio',
-            data: chartData.portfolio,
+            data: d.portfolio,
             borderColor: '#7c3aed',
-            borderWidth: 1.5,
+            borderWidth: 2,
             pointRadius: 0,
             tension: 0.3,
             fill: false,
           },
           {
             label: 'Nifty 50',
-            data: chartData.benchmark,
+            data: d.nifty,
             borderColor: '#4ade80',
-            borderWidth: 1,
-            borderDash: [4, 4],
+            borderWidth: 1.5,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          },
+          {
+            label: 'S&P 500',
+            data: d.sp500,
+            borderColor: '#60a5fa',
+            borderWidth: 1.5,
+            borderDash: [5, 4],
             pointRadius: 0,
             tension: 0.3,
             fill: false,
@@ -261,21 +360,27 @@
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: '#12122a',
+            backgroundColor: '#0e0e1a',
             titleColor: '#6b6b9a',
-            bodyColor: '#c4b5fd',
-            borderColor: '#3d3d5c',
-            borderWidth: 0.5,
+            bodyColor: '#e2e8f0',
+            borderColor: '#1a1a2e',
+            borderWidth: 1,
+            padding: 12,
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2) ?? '—'}`
+            }
           }
         },
         scales: {
           x: {
             ticks: { color: '#3d3d5c', font: { size: 10 }, maxTicksLimit: 8 },
             grid: { color: '#0d0d1f' },
+            border: { color: '#1a1a2e' }
           },
           y: {
             ticks: { color: '#3d3d5c', font: { size: 10 } },
             grid: { color: '#0d0d1f' },
+            border: { color: '#1a1a2e' }
           }
         }
       }
@@ -295,7 +400,9 @@
         <td class="${colorClass(h.total_ret)}">${sign(h.total_ret)}</td>
         <td>${fmt(h.value)}</td>
         <td>
-          <div class="bar"><div class="bar-fill" style="width:${h.weight}%"></div></div>
+          <div class="weight-bar">
+            <div class="weight-fill" style="width:${Math.min(h.weight, 100)}%"></div>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -306,43 +413,48 @@
       const res  = await fetch('/api/data');
       const json = await res.json();
       if (json.status !== 'ok') throw new Error(json.message);
-
       const d = json.data;
 
-      // hero
       document.getElementById('end-val').textContent = fmt(d.end_val);
+
       const diff = d.end_val - d.start_val;
       const sub  = document.getElementById('hero-sub');
-      sub.textContent = (diff >= 0 ? '+' : '') + fmt(Math.abs(diff)) + ' · ' + sign(d.total_ret) + ' since inception';
+      sub.textContent = (diff >= 0 ? '+' : '-') + fmt(Math.abs(diff)) + '  ·  ' + sign(d.total_ret) + ' since inception';
       sub.className = 'hero-sub ' + colorClass(d.total_ret);
 
-      // kpis
       const alpha = document.getElementById('alpha');
       alpha.textContent = sign(d.alpha);
       alpha.className = 'kpi-val ' + colorClass(d.alpha);
 
-      document.getElementById('sharpe').textContent = d.sharpe.toFixed(2);
-      document.getElementById('best-day').textContent = '+' + d.best_day.toFixed(2) + '%';
-      document.getElementById('worst-day').textContent = d.worst_day.toFixed(2) + '%';
+      document.getElementById('sharpe').textContent = Number(d.sharpe).toFixed(2);
+      document.getElementById('best-day').textContent = '+' + Number(d.best_day).toFixed(2) + '%';
+      document.getElementById('worst-day').textContent = Number(d.worst_day).toFixed(2) + '%';
+      document.getElementById('updated-at').textContent = 'Last updated ' + d.updated_at + ' · Auto-refreshes every 60s';
 
-      // updated
-      document.getElementById('updated-at').textContent =
-        'Last updated ' + d.updated_at + ' · Auto-refreshes every 60s';
-
-      // chart + table
       renderChart(d.chart);
       renderHoldings(d.holdings);
 
       document.getElementById('error-msg').style.display = 'none';
-
     } catch (err) {
       const e = document.getElementById('error-msg');
       e.style.display = 'block';
-      e.textContent = 'Error fetching data: ' + err.message;
+      e.textContent = 'Error: ' + err.message;
     }
   }
 
-  // initial load + auto-refresh every 60 seconds
+  function handleRefresh() {
+    const btn  = document.getElementById('refresh-btn');
+    const icon = document.getElementById('refresh-icon');
+    btn.classList.add('spinning');
+    btn.disabled = true;
+    fetchData().finally(() => {
+      setTimeout(() => {
+        btn.classList.remove('spinning');
+        btn.disabled = false;
+      }, 800);
+    });
+  }
+
   fetchData();
   setInterval(fetchData, 60000);
 </script>
