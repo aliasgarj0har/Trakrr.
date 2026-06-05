@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trackrr</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #080810;
+      color: #c4b5fd;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 36px 48px;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+    .logo { font-size: 22px; font-weight: 500; color: #fff; letter-spacing: -0.5px; }
+    .logo span { color: #7c3aed; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .live-pill {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; color: #4ade80;
+      letter-spacing: 0.8px; text-transform: uppercase;
+    }
+    .pulse {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .market-time { font-size: 12px; color: #3d3d5c; }
+
+    /* HERO */
+    .hero { margin-bottom: 36px; padding-bottom: 32px; border-bottom: 0.5px solid #12122a; }
+    .section-label {
+      font-size: 10px; color: #3d3d5c;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+    .hero-value { font-size: 48px; font-weight: 500; color: #fff; letter-spacing: -2px; margin-bottom: 6px; }
+    .hero-sub { font-size: 14px; }
+    .red { color: #e05555; }
+    .grn { color: #4ade80; }
+    .pur { color: #a78bfa; }
+
+    /* KPI ROW */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: #12122a;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+    .kpi { background: #080810; padding: 20px 22px; }
+    .kpi-label {
+      font-size: 10px; color: #3d3d5c;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .kpi-val { font-size: 20px; font-weight: 500; }
+
+    /* CHART */
+    .chart-wrap {
+      background: #0d0d1a;
+      border: 0.5px solid #12122a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 36px;
+    }
+    .chart-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 20px;
+    }
+    .chart-title { font-size: 13px; color: #6b6b9a; }
+    .legend { display: flex; gap: 16px; }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #3d3d5c; }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* TABLE */
+    .accent-line { width: 28px; height: 2px; background: #7c3aed; border-radius: 1px; margin-bottom: 10px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: 10px; color: #3d3d5c; font-weight: 400;
+      text-align: left; padding: 0 0 14px;
+      border-bottom: 0.5px solid #12122a;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    th:not(:first-child) { text-align: right; }
+    td {
+      padding: 15px 0;
+      border-bottom: 0.5px solid #0d0d1f;
+      font-size: 13px; color: #6b6b9a;
+      vertical-align: middle;
+    }
+    td:not(:first-child) { text-align: right; }
+    tr:last-child td { border-bottom: none; }
+    .ticker { font-size: 13px; font-weight: 500; color: #c4b5fd; }
+    .co-name { font-size: 11px; color: #3d3d5c; margin-top: 2px; }
+    .bar { height: 2px; background: #12122a; border-radius: 1px; width: 56px; margin-left: auto; margin-top: 6px; }
+    .bar-fill { height: 2px; border-radius: 1px; background: #7c3aed; }
+
+    /* FOOTER */
+    footer {
+      margin-top: 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 20px; border-top: 0.5px solid #12122a;
+    }
+    .footer-left { font-size: 11px; color: #3d3d5c; }
+    .refresh-btn {
+      font-size: 11px; color: #a78bfa;
+      border: 0.5px solid #3b0764; background: transparent;
+      padding: 7px 16px; border-radius: 8px;
+      cursor: pointer; letter-spacing: 0.3px;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover { background: #12122a; }
+
+    /* LOADING / ERROR */
+    .state-msg {
+      text-align: center; padding: 80px 0;
+      font-size: 13px; color: #3d3d5c;
+    }
+    #error-msg { display: none; color: #e05555; text-align: center; padding: 16px; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Trackrr<span>.</span></div>
+  <div class="nav-right">
+    <div class="live-pill"><div class="pulse"></div>Live</div>
+    <div class="market-time" id="market-time">NSE · 15 min delay</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="section-label">Portfolio value</div>
+  <div class="hero-value" id="end-val">—</div>
+  <div class="hero-sub" id="hero-sub">Loading...</div>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="kpi-label">vs Nifty 50</div>
+    <div class="kpi-val" id="alpha">—</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Sharpe ratio</div>
+    <div class="kpi-val pur" id="sharpe">—</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Best day</div>
+    <div class="kpi-val grn" id="best-day">—</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Worst day</div>
+    <div class="kpi-val red" id="worst-day">—</div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-wrap">
+  <div class="chart-header">
+    <div class="chart-title">Portfolio vs Nifty 50 — indexed to 100</div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#7c3aed"></div>Portfolio</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#4ade80"></div>Nifty 50</div>
+    </div>
+  </div>
+  <canvas id="perfChart" height="90"></canvas>
+</div>
+
+<!-- TABLE -->
+<div class="accent-line"></div>
+<div class="section-label">Holdings</div>
+<div id="error-msg"></div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Stock</th>
+        <th>Price</th>
+        <th>Today</th>
+        <th>Return</th>
+        <th>Value</th>
+        <th>Weight</th>
+      </tr>
+    </thead>
+    <tbody id="holdings-body">
+      <tr><td colspan="6" class="state-msg">Fetching live data...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <div class="footer-left" id="updated-at">—</div>
+  <button class="refresh-btn" onclick="fetchData()">Refresh now</button>
+</footer>
+
+<script>
+  let chart = null;
+
+  function fmt(n) {
+    return '₹' + Number(n).toLocaleString('en-IN');
+  }
+
+  function sign(n) {
+    return n >= 0 ? '+' + n.toFixed(2) + '%' : n.toFixed(2) + '%';
+  }
+
+  function colorClass(n) {
+    return n >= 0 ? 'grn' : 'red';
+  }
+
+  function renderChart(chartData) {
+    const ctx = document.getElementById('perfChart').getContext('2d');
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartData.dates,
+        datasets: [
+          {
+            label: 'Portfolio',
+            data: chartData.portfolio,
+            borderColor: '#7c3aed',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          },
+          {
+            label: 'Nifty 50',
+            data: chartData.benchmark,
+            borderColor: '#4ade80',
+            borderWidth: 1,
+            borderDash: [4, 4],
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#12122a',
+            titleColor: '#6b6b9a',
+            bodyColor: '#c4b5fd',
+            borderColor: '#3d3d5c',
+            borderWidth: 0.5,
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#3d3d5c', font: { size: 10 }, maxTicksLimit: 8 },
+            grid: { color: '#0d0d1f' },
+          },
+          y: {
+            ticks: { color: '#3d3d5c', font: { size: 10 } },
+            grid: { color: '#0d0d1f' },
+          }
+        }
+      }
+    });
+  }
+
+  function renderHoldings(holdings) {
+    const tbody = document.getElementById('holdings-body');
+    tbody.innerHTML = holdings.map(h => `
+      <tr>
+        <td>
+          <div class="ticker">${h.ticker}</div>
+          <div class="co-name">${h.name}</div>
+        </td>
+        <td>${fmt(h.price)}</td>
+        <td class="${colorClass(h.today_ret)}">${sign(h.today_ret)}</td>
+        <td class="${colorClass(h.total_ret)}">${sign(h.total_ret)}</td>
+        <td>${fmt(h.value)}</td>
+        <td>
+          <div class="bar"><div class="bar-fill" style="width:${h.weight}%"></div></div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function fetchData() {
+    try {
+      const res  = await fetch('/api/data');
+      const json = await res.json();
+      if (json.status !== 'ok') throw new Error(json.message);
+
+      const d = json.data;
+
+      // hero
+      document.getElementById('end-val').textContent = fmt(d.end_val);
+      const diff = d.end_val - d.start_val;
+      const sub  = document.getElementById('hero-sub');
+      sub.textContent = (diff >= 0 ? '+' : '') + fmt(Math.abs(diff)) + ' · ' + sign(d.total_ret) + ' since inception';
+      sub.className = 'hero-sub ' + colorClass(d.total_ret);
+
+      // kpis
+      const alpha = document.getElementById('alpha');
+      alpha.textContent = sign(d.alpha);
+      alpha.className = 'kpi-val ' + colorClass(d.alpha);
+
+      document.getElementById('sharpe').textContent = d.sharpe.toFixed(2);
+      document.getElementById('best-day').textContent = '+' + d.best_day.toFixed(2) + '%';
+      document.getElementById('worst-day').textContent = d.worst_day.toFixed(2) + '%';
+
+      // updated
+      document.getElementById('updated-at').textContent =
+        'Last updated ' + d.updated_at + ' · Auto-refreshes every 60s';
+
+      // chart + table
+      renderChart(d.chart);
+      renderHoldings(d.holdings);
+
+      document.getElementById('error-msg').style.display = 'none';
+
+    } catch (err) {
+      const e = document.getElementById('error-msg');
+      e.style.display = 'block';
+      e.textContent = 'Error fetching data: ' + err.message;
+    }
+  }
+
+  // initial load + auto-refresh every 60 seconds
+  fetchData();
+  setInterval(fetchData, 60000);
+</script>
+</body>
+</html>
