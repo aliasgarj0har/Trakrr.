@@ -1,5 +1,3 @@
-# app.py — Trackrr backend
-
 from flask import Flask, render_template, jsonify
 import yfinance as yf
 import pandas as pd
@@ -15,85 +13,73 @@ HOLDINGS = {
     "HDFCBANK.NS": {"shares": 15, "name": "HDFC Bank"},
 }
 
-BENCHMARKS  = {"^NSEI": "Nifty 50", "^GSPC": "S&P 500"}
 PERIOD_DAYS = 180
 
-def get_portfolio_data():
-    tickers = list(HOLDINGS.keys()) + list(BENCHMARKS.keys())
-    end     = datetime.today()
-    start   = end - timedelta(days=PERIOD_DAYS)
+def to_list(series):
+    return [None if (v is None or (isinstance(v, float) and np.isnan(v))) else round(v, 2) for v in series]
 
-    raw    = yf.download(tickers, start=start, end=end,
-                         auto_adjust=True, progress=False)
+def get_portfolio_data():
+    end   = datetime.today()
+    start = end - timedelta(days=PERIOD_DAYS)
+    tickers = list(HOLDINGS.keys()) + ["^NSEI", "^GSPC"]
+    raw    = yf.download(tickers, start=start, end=end, auto_adjust=True, progress=False)
     prices = raw["Close"] if isinstance(raw.columns, pd.MultiIndex) else raw[["Close"]]
     prices.dropna(how="all", inplace=True)
-
     nifty  = prices["^NSEI"].dropna()
     sp500  = prices["^GSPC"].dropna()
-    stocks = prices.drop(columns=list(BENCHMARKS.keys()))
-
+    stocks = prices.drop(columns=["^NSEI", "^GSPC"])
     port_value = pd.Series(0.0, index=stocks.index)
     for ticker, info in HOLDINGS.items():
         if ticker in stocks.columns:
             port_value += stocks[ticker] * info["shares"]
-
     port_ret  = port_value.pct_change().dropna()
     nifty_ret = nifty.pct_change().dropna()
     port_ret, nifty_ret = port_ret.align(nifty_ret, join="inner")
-
-    start_val   = port_value.iloc[0]
-    end_val     = port_value.iloc[-1]
+    start_val   = float(port_value.iloc[0])
+    end_val     = float(port_value.iloc[-1])
     total_ret   = (end_val - start_val) / start_val * 100
-    nifty_total = ((1 + nifty_ret).prod() - 1) * 100
+    nifty_total = float(((1 + nifty_ret).prod() - 1) * 100)
     alpha       = total_ret - nifty_total
-    sharpe      = (port_ret.mean() / port_ret.std()) * (252 ** 0.5)
-
-    # per-stock
+    sharpe      = float((port_ret.mean() / port_ret.std()) * (252 ** 0.5))
     holdings_data = []
     for ticker, info in HOLDINGS.items():
         if ticker not in stocks.columns:
             continue
         col       = stocks[ticker].dropna()
-        ret       = (col.iloc[-1] - col.iloc[0]) / col.iloc[0] * 100
-        today_ret = col.pct_change().iloc[-1] * 100
-        value     = col.iloc[-1] * info["shares"]
+        ret       = (float(col.iloc[-1]) - float(col.iloc[0])) / float(col.iloc[0]) * 100
+        today_ret = float(col.pct_change().iloc[-1]) * 100
+        value     = float(col.iloc[-1]) * info["shares"]
         weight    = (value / end_val) * 100
         holdings_data.append({
             "ticker":    ticker.replace(".NS", ""),
             "name":      info["name"],
             "shares":    info["shares"],
-            "price":     round(col.iloc[-1], 1),
+            "price":     round(float(col.iloc[-1]), 1),
             "today_ret": round(today_ret, 2),
             "total_ret": round(ret, 2),
             "value":     round(value, 0),
             "weight":    round(weight, 1),
         })
-
-    # chart — all three normalised to 100
-    port_norm  = (port_value / port_value.iloc[0] * 100).round(2)
-    nifty_norm = (nifty / nifty.iloc[0] * 100).round(2)
-    sp500_norm = (sp500 / sp500.iloc[0] * 100).round(2)
-    nifty_norm, _ = nifty_norm.align(port_norm, join="right")
-    sp500_norm, _ = sp500_norm.align(port_norm, join="right")
-
+    port_norm  = port_value / port_value.iloc[0] * 100
+    nifty_norm = (nifty / nifty.iloc[0] * 100).reindex(port_norm.index)
+    sp500_norm = (sp500 / sp500.iloc[0] * 100).reindex(port_norm.index)
     chart_dates = [d.strftime("%d %b '%y") for d in port_norm.index]
-
     return {
-        "updated_at":   datetime.now().strftime("%H:%M:%S"),
-        "start_val":    round(start_val, 0),
-        "end_val":      round(end_val, 0),
-        "total_ret":    round(total_ret, 2),
-        "nifty_total":  round(nifty_total, 2),
-        "alpha":        round(alpha, 2),
-        "sharpe":       round(sharpe, 2),
-        "best_day":     round(port_ret.max() * 100, 2),
-        "worst_day":    round(port_ret.min() * 100, 2),
-        "holdings":     holdings_data,
+        "updated_at":  datetime.now().strftime("%H:%M:%S"),
+        "start_val":   round(start_val, 0),
+        "end_val":     round(end_val, 0),
+        "total_ret":   round(total_ret, 2),
+        "nifty_total": round(nifty_total, 2),
+        "alpha":       round(alpha, 2),
+        "sharpe":      round(sharpe, 2),
+        "best_day":    round(float(port_ret.max()) * 100, 2),
+        "worst_day":   round(float(port_ret.min()) * 100, 2),
+        "holdings":    holdings_data,
         "chart": {
             "dates":     chart_dates,
-            "portfolio": port_norm.tolist(),
-            "nifty":     nifty_norm.apply(lambda x: None if (isinstance(x, float) and (x != x)) else x).tolist(),
-            "sp500":     sp500_norm.apply(lambda x: None if (isinstance(x, float) and (x != x)) else x).tolist(),
+            "portfolio": to_list(port_norm),
+            "nifty":     to_list(nifty_norm),
+            "sp500":     to_list(sp500_norm),
         }
     }
 
@@ -104,8 +90,7 @@ def index():
 @app.route("/api/data")
 def api_data():
     try:
-        data = get_portfolio_data()
-        return jsonify({"status": "ok", "data": data})
+        return jsonify({"status": "ok", "data": get_portfolio_data()})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
