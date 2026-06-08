@@ -8,8 +8,8 @@ app = Flask(__name__)
 
 HOLDINGS = {
     "ADANIPORTS.NS": {"shares": 10,  "name": "Adani Ports",   "sector": "Infrastructure"},
-    "TATAMOTORS.NS": {"shares": 30,  "name": "Tata Motors",   "sector": "Automotive"},
-    "ZOMATO.NS":     {"shares": 40,  "name": "Zomato",        "sector": "Consumer Tech"},
+    "TATAMOTORS.BO": {"shares": 30,  "name": "Tata Motors",   "sector": "Automotive"},
+    "ZOMATO.BO":     {"shares": 40,  "name": "Zomato",        "sector": "Consumer Tech"},
     "AMZN":          {"shares": 4,   "name": "Amazon",        "sector": "Global Tech"},
     "AAPL":          {"shares": 8,   "name": "Apple",         "sector": "Global Tech"},
 }
