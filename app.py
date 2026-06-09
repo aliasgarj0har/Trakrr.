@@ -101,6 +101,7 @@ def get_data():
             "total_ret": round(ret, 2),
             "value":     round(value, 0),
             "weight":    round(weight, 1),
+            "shares":    info["shares"],
         })
 
     # chart
