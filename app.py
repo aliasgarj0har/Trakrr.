@@ -3,8 +3,12 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import time
 
 app = Flask(__name__)
+
+_cache = {"data": None, "ts": 0}
+CACHE_TTL = 55  # seconds
 
 HOLDINGS = {
     "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",   "sector": "Infrastructure"},
@@ -128,9 +132,18 @@ def index():
 
 @app.route("/api/data")
 def api_data():
+    now = time.time()
+    if _cache["data"] is not None and (now - _cache["ts"]) < CACHE_TTL:
+        return jsonify({"status": "ok", "data": _cache["data"]})
+
     try:
-        return jsonify({"status": "ok", "data": get_data()})
+        data = get_data()
+        _cache["data"] = data
+        _cache["ts"] = now
+        return jsonify({"status": "ok", "data": data})
     except Exception as e:
+        if _cache["data"] is not None:
+            return jsonify({"status": "ok", "data": _cache["data"]})
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
