@@ -64,6 +64,14 @@ def get_data():
     end_val     = float(port_value.iloc[-1])
     total_ret   = (end_val - start_val) / start_val * 100
     nifty_total = float(((1 + nifty_ret).prod() - 1) * 100)
+    sp500_total = 0
+    try:
+        sp500_ret_series = sp500.pct_change().dropna()
+        sp500_total = float(((1 + sp500_ret_series).prod() - 1) * 100)
+        if np.isnan(sp500_total):
+            sp500_total = 0
+    except Exception:
+        sp500_total = 0
     alpha       = total_ret - nifty_total
     sharpe      = float((port_ret.mean() / port_ret.std()) * (252 ** 0.5))
     max_dd      = float(((port_value / port_value.cummax()) - 1).min() * 100)
@@ -101,8 +109,18 @@ def get_data():
     sp500_norm = (sp500  / sp500.iloc[0]  * 100).reindex(port_norm.index)
     chart_dates = [d.strftime("%d %b '%y") for d in port_norm.index]
 
-    # daily returns for bar chart
-    daily = (port_ret * 100).reindex(port_norm.index).fillna(0)
+    today_change = 0
+    today_change_abs = 0
+    try:
+        if len(port_ret) > 0:
+            tc = float(port_ret.iloc[-1]) * 100
+            if not np.isnan(tc):
+                today_change = tc
+                tca = end_val * tc / 100
+                today_change_abs = 0 if np.isnan(tca) else tca
+    except Exception:
+        today_change = 0
+        today_change_abs = 0
 
     return {
         "updated_at":  datetime.now().strftime("%H:%M:%S"),
@@ -111,18 +129,20 @@ def get_data():
         "end_val":     round(end_val, 0),
         "total_ret":   round(total_ret, 2),
         "nifty_total": round(nifty_total, 2),
+        "sp500_total": round(sp500_total, 2),
         "alpha":       round(alpha, 2),
         "sharpe":      round(sharpe, 2),
         "max_dd":      round(max_dd, 2),
         "best_day":    round(float(port_ret.max()) * 100, 2),
-        "worst_day":   round(float(port_ret.min()) * 100, 2),
-        "holdings":    holdings_data,
+        "worst_day":        round(float(port_ret.min()) * 100, 2),
+        "today_change":     round(today_change, 2),
+        "today_change_abs": round(today_change_abs, 0),
+        "holdings":         holdings_data,
         "chart": {
             "dates":     chart_dates,
             "portfolio": to_list(port_norm),
             "nifty":     to_list(nifty_norm),
             "sp500":     to_list(sp500_norm),
-            "daily":     to_list(daily),
         }
     }
 
