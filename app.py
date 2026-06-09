@@ -7,11 +7,11 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 HOLDINGS = {
-    "ADANIPORTS.NS": {"shares": 10,  "name": "Adani Ports",   "sector": "Infrastructure"},
-    "TMPV.NS": {"shares": 30,  "name": "Tata Motors PV",   "sector": "Automotive"},
-    "ETERNAL.NS":     {"shares": 40,  "name": "Eternal (Zomato)",        "sector": "Consumer Tech"},
-    "AMZN":          {"shares": 4,   "name": "Amazon",        "sector": "Global Tech"},
-    "AAPL":          {"shares": 8,   "name": "Apple",         "sector": "Global Tech"},
+    "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",   "sector": "Infrastructure"},
+    "TMPV.NS": {"shares": 10,  "name": "Tata Motors PV",   "sector": "Automotive"},
+    "ETERNAL.NS":     {"shares": 15,  "name": "Eternal (Zomato)",        "sector": "Consumer Tech"},
+    "AMZN":          {"shares": 2,   "name": "Amazon",        "sector": "Global Tech"},
+    "AAPL":          {"shares": 5,   "name": "Apple",         "sector": "Global Tech"},
 }
 
 START_DATE  = "2026-01-01"

@@ -9,481 +9,407 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#07070f;
-      --bg2:#0c0c18;
-      --surface:#10101e;
-      --surface2:#16162a;
-      --border:#1e1e35;
+      --beige:#f5f0e8;
+      --beige2:#ede8df;
+      --beige3:#e0d8cc;
+      --beige4:#faf7f2;
+      --black:#0d0d18;
+      --black2:#12121f;
+      --black3:#1a1a2e;
       --purple:#7c3aed;
       --purple-l:#a78bfa;
       --purple-d:#3b0764;
-      --purple-glow:rgba(124,58,237,0.15);
-      --green:#4ade80;
-      --green-glow:rgba(74,222,128,0.1);
-      --red:#f87171;
-      --text:#f1f0ff;
-      --text2:#8b8aad;
-      --text3:#3d3d5c;
+      --purple-bg:rgba(124,58,237,0.08);
+      --green:#16a34a;
+      --green-bg:rgba(22,163,74,0.08);
+      --green-border:rgba(22,163,74,0.2);
+      --red:#dc2626;
+      --text-dark:#1a1008;
+      --text-mid:#5a4a3a;
+      --text-muted:#8b7355;
+      --text-faint:#b8a898;
+      --border:#e0d8cc;
     }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+    html,body{height:100%}
+    body{
+      background:var(--beige);
+      color:var(--text-dark);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      display:flex;min-height:100vh;overflow-x:hidden;
+    }
 
-    /* NAVBAR */
-    nav{
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:210px;min-height:100vh;background:var(--black);
+      display:flex;flex-direction:column;
+      position:fixed;left:0;top:0;bottom:0;z-index:50;
+      border-right:0.5px solid var(--black3);
+    }
+    .s-logo{
+      padding:24px 20px;display:flex;align-items:center;gap:10px;
+      border-bottom:0.5px solid var(--black3);flex-shrink:0;
+    }
+    .s-icon{
+      width:32px;height:32px;background:var(--purple);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;font-weight:700;color:#fff;
+      box-shadow:0 0 16px rgba(124,58,237,0.4);flex-shrink:0;
+    }
+    .s-name{font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px}
+    .s-name span{color:var(--purple-l)}
+    .s-nav{padding:20px 0;flex:1}
+    .s-section{
+      font-size:9px;color:#3d3d5c;text-transform:uppercase;
+      letter-spacing:1px;padding:0 20px;margin-bottom:6px;margin-top:20px;
+    }
+    .s-item{
+      display:flex;align-items:center;gap:10px;
+      padding:11px 20px;font-size:13px;color:#6b6b9a;
+      cursor:pointer;transition:all 0.15s;
+      border-right:2px solid transparent;
+    }
+    .s-item:hover{color:#c4b5fd;background:rgba(124,58,237,0.06)}
+    .s-item.active{color:#e8e4ff;background:rgba(124,58,237,0.12);border-right-color:var(--purple)}
+    .s-footer{
+      padding:16px 20px;border-top:0.5px solid var(--black3);
+      font-size:11px;color:#3d3d5c;line-height:1.8;flex-shrink:0;
+    }
+
+    /* ── MAIN WRAPPER ── */
+    .main-wrapper{
+      margin-left:210px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+      width:calc(100vw - 210px);
+    }
+
+    /* TOPBAR */
+    .topbar{
       display:flex;justify-content:space-between;align-items:center;
-      padding:18px 48px;
-      border-bottom:0.5px solid var(--border);
-      background:rgba(7,7,15,0.92);
-      position:sticky;top:0;z-index:100;
-      backdrop-filter:blur(20px);
+      padding:16px 36px;border-bottom:0.5px solid var(--border);
+      background:rgba(245,240,232,0.97);
+      position:sticky;top:0;z-index:40;
+      backdrop-filter:blur(12px);
+      flex-shrink:0;
     }
-    .logo-wrap{display:flex;align-items:center;gap:10px}
-    .logo-icon{
-      width:34px;height:34px;background:var(--purple);
-      border-radius:9px;display:flex;align-items:center;justify-content:center;
-      font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px;
-      box-shadow:0 0 20px rgba(124,58,237,0.4);
-    }
-    .logo-text{font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.5px}
-    .logo-text span{color:var(--purple-l)}
-    .nav-right{display:flex;align-items:center;gap:16px}
+    .topbar-left{display:flex;align-items:center;gap:10px}
+    .page-title{font-size:14px;font-weight:500;color:var(--text-dark)}
+    .breadcrumb{font-size:12px;color:var(--text-faint)}
+    .topbar-right{display:flex;align-items:center;gap:12px}
     .live-pill{
-      display:flex;align-items:center;gap:7px;
-      font-size:11px;color:var(--green);letter-spacing:0.8px;text-transform:uppercase;
-      background:rgba(74,222,128,0.08);padding:6px 14px;border-radius:20px;
-      border:0.5px solid rgba(74,222,128,0.2);
+      display:flex;align-items:center;gap:6px;
+      font-size:11px;color:var(--green);
+      background:var(--green-bg);padding:5px 12px;
+      border-radius:20px;border:0.5px solid var(--green-border);
     }
     .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
-    .delay-tag{font-size:11px;color:var(--text3)}
+    .delay-tag{font-size:11px;color:var(--text-faint)}
     .refresh-btn{
-      display:flex;align-items:center;gap:7px;
-      font-size:12px;color:var(--purple-l);
-      border:0.5px solid var(--purple-d);background:rgba(124,58,237,0.08);
-      padding:8px 18px;border-radius:8px;cursor:pointer;
-      transition:all 0.2s;letter-spacing:0.2px;
+      display:flex;align-items:center;gap:6px;
+      font-size:12px;color:var(--purple);
+      border:0.5px solid #c4b5fd;background:var(--purple-bg);
+      padding:7px 16px;border-radius:8px;cursor:pointer;
+      transition:all 0.2s;
     }
-    .refresh-btn:hover{background:rgba(124,58,237,0.2);border-color:var(--purple)}
+    .refresh-btn:hover{background:rgba(124,58,237,0.15);border-color:var(--purple)}
     .refresh-btn.spinning svg{animation:spin 0.7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* HERO SECTION */
-    .hero-section{
-      padding:48px 48px 0;
-      display:grid;grid-template-columns:1fr auto;
-      gap:32px;align-items:start;
-      margin-bottom:36px;
-    }
-    .hero-eyebrow{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-    .hero-value{font-size:64px;font-weight:600;color:#fff;letter-spacing:-3px;line-height:1;margin-bottom:10px}
-    .hero-sub{font-size:15px;color:var(--text2)}
-    .hero-sub.red{color:var(--red)}
-    .hero-sub.grn{color:var(--green)}
-    .hero-meta{font-size:12px;color:var(--text3);margin-top:6px}
+    /* CONTENT */
+    .content{padding:32px 36px;flex:1;width:100%}
+
+    /* HERO */
+    .hero{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+    .hero-eyebrow{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+    .hero-value{font-size:52px;font-weight:600;color:var(--text-dark);letter-spacing:-2px;line-height:1;margin-bottom:10px}
+    .today-pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 14px;border-radius:20px;}
+    .today-pill.grn{color:var(--green);background:var(--green-bg);border:0.5px solid var(--green-border)}
+    .today-pill.red{color:var(--red);background:rgba(220,38,38,0.06);border:0.5px solid rgba(220,38,38,0.15)}
     .hero-right{text-align:right}
-    .since-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+    .since-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+    .since-ret{font-size:32px;font-weight:600;letter-spacing:-1px}
 
-    /* KPI STRIP */
-    .kpi-strip{
-      display:grid;grid-template-columns:repeat(5,1fr);
-      gap:1px;background:var(--border);
-      margin:0 48px 36px;
-      border-radius:14px;overflow:hidden;
-      border:0.5px solid var(--border);
-    }
-    .kpi{background:var(--surface);padding:20px 22px;transition:background 0.2s;position:relative;overflow:hidden}
-    .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background 0.2s}
-    .kpi:hover{background:var(--surface2)}
-    .kpi:hover::before{background:var(--purple)}
-    .kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
-    .kpi-val{font-size:20px;font-weight:600;color:#fff}
-    .kpi-val.red{color:var(--red)}
+    /* KPI ROW */
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+    .kpi{background:#fff;border-radius:12px;padding:18px 20px;border:0.5px solid var(--border);transition:box-shadow 0.2s,border-color 0.2s;}
+    .kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,0.06);border-color:var(--beige3)}
+    .kpi-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px}
+    .kpi-val{font-size:22px;font-weight:600}
+    .kpi-val.pur{color:var(--purple)}
     .kpi-val.grn{color:var(--green)}
-    .kpi-val.pur{color:var(--purple-l)}
+    .kpi-val.red{color:var(--red)}
 
-    /* CHART AREA */
-    .chart-section{padding:0 48px;margin-bottom:36px;display:grid;grid-template-columns:1fr 280px;gap:20px}
-    .chart-card{
-      background:var(--surface);border:0.5px solid var(--border);
-      border-radius:16px;padding:28px;position:relative;overflow:hidden;
-    }
-    .chart-card::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-      background:linear-gradient(90deg,transparent,var(--purple),transparent);
-      opacity:0.3;
-    }
-    .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
-    .chart-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
-    .chart-sub{font-size:11px;color:var(--text3)}
-    .legend{display:flex;gap:18px;align-items:center}
-    .leg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2)}
-    .leg-line{width:18px;height:2px;border-radius:1px}
-    .leg-dash{width:18px;height:0;border-top:2px dashed;border-radius:1px}
+    /* CHART GRID */
+    .chart-grid{display:grid;grid-template-columns:1fr 220px;gap:16px;margin-bottom:24px}
+    .chart-card{background:var(--black);border-radius:14px;padding:24px;border:0.5px solid var(--black3);}
+    .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+    .chart-title{font-size:13px;font-weight:500;color:#e8e4ff;margin-bottom:3px}
+    .chart-sub{font-size:11px;color:#3d3d5c}
+    .legend{display:flex;gap:16px}
+    .leg{display:flex;align-items:center;gap:6px;font-size:11px;color:#6b6b9a}
+    .leg-line{width:16px;height:2px;border-radius:1px}
+    .leg-dash{width:16px;height:0;border-top:2px dashed}
 
-    /* SIDE STATS */
-    .side-stats{display:flex;flex-direction:column;gap:12px}
-    .stat-card{
-      background:var(--surface);border:0.5px solid var(--border);
-      border-radius:12px;padding:18px 20px;
-      transition:border-color 0.2s;
-    }
-    .stat-card:hover{border-color:var(--purple-d)}
-    .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
-    .stat-val{font-size:22px;font-weight:600}
-    .stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+    /* SIDE CARDS */
+    .side-cards{display:flex;flex-direction:column;gap:12px}
+    .side-card{background:#fff;border-radius:12px;padding:16px 18px;border:0.5px solid var(--border);transition:border-color 0.2s;}
+    .side-card:hover{border-color:var(--purple-l)}
+    .side-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:8px}
+    .side-val{font-size:18px;font-weight:600;color:var(--text-dark)}
+    .side-sub{font-size:10px;color:var(--text-faint);margin-top:3px}
 
-    /* HOLDINGS */
-    .holdings-section{padding:0 48px;margin-bottom:48px}
-    .section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-    .accent{width:3px;height:20px;background:var(--purple);border-radius:2px;box-shadow:0 0 8px rgba(124,58,237,0.5)}
-    .section-title{font-size:14px;font-weight:500;color:var(--text)}
-    .table-wrap{
-      background:var(--surface);border:0.5px solid var(--border);
-      border-radius:16px;overflow:hidden;
-    }
+    /* TABLE */
+    .table-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .accent{width:3px;height:20px;background:var(--purple);border-radius:2px}
+    .section-title{font-size:14px;font-weight:500;color:var(--text-dark)}
+    .table-wrap{background:#fff;border-radius:14px;border:0.5px solid var(--border);overflow:hidden;margin-bottom:0}
     table{width:100%;border-collapse:collapse}
-    thead tr{background:var(--surface2)}
-    th{
-      font-size:10px;color:var(--text3);font-weight:400;
-      text-align:left;padding:14px 20px;
-      border-bottom:0.5px solid var(--border);
-      letter-spacing:0.6px;text-transform:uppercase;
-    }
+    thead tr{background:var(--beige4)}
+    th{font-size:10px;color:var(--text-muted);font-weight:400;text-align:left;padding:12px 20px;border-bottom:0.5px solid var(--border);letter-spacing:0.5px;text-transform:uppercase;}
     th:not(:first-child){text-align:right}
-    td{
-      padding:18px 20px;border-bottom:0.5px solid var(--border);
-      font-size:13px;color:var(--text2);vertical-align:middle;
-      transition:background 0.15s;
-    }
+    td{padding:15px 20px;border-bottom:0.5px solid #f5f0e8;font-size:13px;color:var(--text-mid);vertical-align:middle;transition:background 0.15s;}
     td:not(:first-child){text-align:right}
     tr:last-child td{border-bottom:none}
-    tbody tr:hover td{background:rgba(124,58,237,0.04)}
-    .ticker-name{font-size:13px;font-weight:600;color:var(--purple-l);margin-bottom:2px}
-    .ticker-sub{font-size:11px;color:var(--text3)}
-    .sector-badge{
-      display:inline-block;font-size:10px;padding:2px 8px;
-      border-radius:4px;background:rgba(124,58,237,0.12);
-      color:var(--purple-l);letter-spacing:0.3px;
-    }
+    tbody tr:hover td{background:#faf7f2}
+    .ticker-name{font-size:13px;font-weight:600;color:var(--purple);margin-bottom:2px}
+    .ticker-sub{font-size:11px;color:var(--text-faint)}
+    .sector-badge{display:inline-block;font-size:9px;padding:3px 8px;border-radius:4px;background:var(--purple-bg);color:var(--purple);letter-spacing:0.3px;font-weight:500;}
     .weight-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-    .weight-pct{font-size:12px;color:var(--text2)}
-    .weight-bar{height:3px;background:var(--border);border-radius:2px;width:64px}
-    .weight-fill{height:3px;border-radius:2px;background:var(--purple);box-shadow:0 0 6px rgba(124,58,237,0.5)}
+    .weight-pct{font-size:12px;color:var(--text-mid)}
+    .weight-bar{height:3px;background:var(--beige3);border-radius:2px;width:60px}
+    .weight-fill{height:3px;border-radius:2px;background:var(--purple)}
     .red{color:var(--red)}
     .grn{color:var(--green)}
 
     /* FOOTER */
-    footer{
-      padding:20px 48px;border-top:0.5px solid var(--border);
+    .footer{
+      padding:16px 36px;
+      border-top:0.5px solid var(--border);
       display:flex;justify-content:space-between;align-items:center;
+      flex-shrink:0;background:var(--beige);
     }
-    .footer-l{font-size:11px;color:var(--text3)}
-    .footer-r{font-size:11px;color:var(--text3)}
+    .footer-l,.footer-r{font-size:11px;color:var(--text-faint)}
 
-    /* LOADING */
-    .loading-cell{text-align:center;padding:48px;font-size:13px;color:var(--text3)}
+    /* MISC */
+    .loading-cell{text-align:center;padding:48px;font-size:13px;color:var(--text-faint)}
     #error-msg{display:none;color:var(--red);text-align:center;padding:16px;font-size:13px}
   </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo-wrap">
-    <div class="logo-icon">T</div>
-    <div class="logo-text">Trackrr<span>.</span></div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="s-logo">
+    <div class="s-icon">T</div>
+    <div class="s-name">Trackrr<span>.</span></div>
   </div>
-  <div class="nav-right">
-    <div class="live-pill"><div class="pulse"></div>Live</div>
-    <div class="delay-tag">NSE · 15 min delay</div>
-    <button class="refresh-btn" id="refresh-btn" onclick="handleRefresh()">
-      <svg id="ref-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-      Refresh
-    </button>
+  <div class="s-nav">
+    <div class="s-section">Portfolio</div>
+    <div class="s-item active">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Overview
+    </div>
+    <div class="s-item">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Holdings
+    </div>
+    <div class="s-section">Analysis</div>
+    <div class="s-item">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </div>
+    <div class="s-item">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+      History
+    </div>
   </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero-section">
-  <div>
-    <div class="hero-eyebrow">Portfolio value</div>
-    <div class="hero-value" id="end-val">—</div>
-    <div class="hero-sub" id="hero-sub">Loading...</div>
-    <div class="hero-meta" id="hero-meta"></div>
-  </div>
-  <div class="hero-right">
-    <div class="since-label">Since inception</div>
-    <div class="kpi-val" id="total-ret" style="font-size:28px;font-weight:600">—</div>
-  </div>
-</div>
-
-<!-- KPI STRIP -->
-<div class="kpi-strip">
-  <div class="kpi">
-    <div class="kpi-label">vs Nifty 50</div>
-    <div class="kpi-val" id="alpha">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Sharpe ratio</div>
-    <div class="kpi-val pur" id="sharpe">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Max drawdown</div>
-    <div class="kpi-val red" id="max-dd">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Best day</div>
-    <div class="kpi-val grn" id="best-day">—</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-label">Worst day</div>
-    <div class="kpi-val red" id="worst-day">—</div>
+  <div class="s-footer">
+    Paper Portfolio · Since 01 Jan 2026
   </div>
 </div>
 
-<!-- CHART + SIDE STATS -->
-<div class="chart-section">
-  <div class="chart-card">
-    <div class="chart-header">
+<!-- MAIN WRAPPER -->
+<div class="main-wrapper">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title">Overview</div>
+      <div class="breadcrumb">/ Paper Portfolio</div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-pill"><div class="pulse"></div>Live</div>
+      <div class="delay-tag">NSE · 15 min delay</div>
+      <button class="refresh-btn" id="refresh-btn" onclick="handleRefresh()">
+        <svg id="ref-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- HERO -->
+    <div class="hero">
       <div>
-        <div class="chart-title">Performance — indexed to 100</div>
-        <div class="chart-sub">Since 1 Jan 2026 · 15 min delay</div>
+        <div class="hero-eyebrow">Portfolio value</div>
+        <div class="hero-value" id="end-val">—</div>
+        <div class="today-pill grn" id="today-pill">Loading...</div>
       </div>
-      <div class="legend">
-        <div class="leg"><div class="leg-line" style="background:#7c3aed"></div>Portfolio</div>
-        <div class="leg"><div class="leg-dash" style="border-color:#4ade80"></div>Nifty 50</div>
-        <div class="leg"><div class="leg-dash" style="border-color:#60a5fa"></div>S&amp;P 500</div>
+      <div class="hero-right">
+        <div class="since-label">Since inception</div>
+        <div class="since-ret" id="total-ret">—</div>
       </div>
     </div>
-    <canvas id="perfChart" height="100"></canvas>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">vs Nifty 50</div><div class="kpi-val" id="alpha">—</div></div>
+      <div class="kpi"><div class="kpi-label">Sharpe ratio</div><div class="kpi-val pur" id="sharpe">—</div></div>
+      <div class="kpi"><div class="kpi-label">Max drawdown</div><div class="kpi-val red" id="max-dd">—</div></div>
+      <div class="kpi"><div class="kpi-label">Best day</div><div class="kpi-val grn" id="best-day">—</div></div>
+    </div>
+
+    <!-- CHART + SIDE -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Performance — indexed to 100</div>
+            <div class="chart-sub">Since 1 Jan 2026 · 15 min delay</div>
+          </div>
+          <div class="legend">
+            <div class="leg"><div class="leg-line" style="background:#a78bfa"></div>Portfolio</div>
+            <div class="leg"><div class="leg-dash" style="border-color:#4ade80"></div>Nifty 50</div>
+            <div class="leg"><div class="leg-dash" style="border-color:#60a5fa"></div>S&amp;P 500</div>
+          </div>
+        </div>
+        <canvas id="perfChart" height="90"></canvas>
+      </div>
+      <div class="side-cards">
+        <div class="side-card"><div class="side-label">Starting value</div><div class="side-val" id="start-val">—</div><div class="side-sub">01 Jan 2026</div></div>
+        <div class="side-card"><div class="side-label">Nifty 50 return</div><div class="side-val" id="nifty-ret">—</div><div class="side-sub">Same period</div></div>
+        <div class="side-card"><div class="side-label">S&amp;P 500 return</div><div class="side-val" id="sp500-ret">—</div><div class="side-sub">Same period</div></div>
+        <div class="side-card"><div class="side-label">Worst day</div><div class="side-val red" id="worst-day">—</div><div class="side-sub">Max single-day loss</div></div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-header">
+      <div class="accent"></div>
+      <div class="section-title">Holdings</div>
+    </div>
+    <div id="error-msg"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Stock</th><th>Sector</th><th>Price</th>
+            <th>Today</th><th>Return</th><th>Value (₹)</th><th>Weight</th>
+          </tr>
+        </thead>
+        <tbody id="holdings-body">
+          <tr><td colspan="7" class="loading-cell">Fetching live data...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="side-stats">
-    <div class="stat-card">
-      <div class="stat-label">Starting value</div>
-      <div class="stat-val pur" id="start-val" style="color:var(--purple-l)">—</div>
-      <div class="stat-sub" id="start-date">Since 1 Jan 2026</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">vs S&amp;P 500</div>
-      <div class="stat-val" id="sp500-ret" style="color:var(--text2)">—</div>
-      <div class="stat-sub">S&amp;P 500 total return</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">vs Nifty 50</div>
-      <div class="stat-val" id="nifty-ret" style="color:var(--text2)">—</div>
-      <div class="stat-sub">Nifty 50 total return</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Last updated</div>
-      <div class="stat-val" id="updated-at" style="font-size:16px;color:var(--text2)">—</div>
-      <div class="stat-sub">Auto-refreshes every 60s</div>
-    </div>
+  <div class="footer">
+    <div class="footer-l" id="footer-updated">Last updated — · Auto-refreshes every 60s</div>
+    <div class="footer-r">Data via Yahoo Finance · Built with Python &amp; Flask</div>
   </div>
 </div>
-
-<!-- HOLDINGS -->
-<div class="holdings-section">
-  <div class="section-header">
-    <div class="accent"></div>
-    <div class="section-title">Holdings</div>
-  </div>
-  <div id="error-msg"></div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Stock</th>
-          <th>Sector</th>
-          <th>Price</th>
-          <th>Today</th>
-          <th>Return</th>
-          <th>Value (₹)</th>
-          <th>Weight</th>
-        </tr>
-      </thead>
-      <tbody id="holdings-body">
-        <tr><td colspan="7" class="loading-cell">Fetching live data...</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-l">Trackrr. — Paper portfolio tracker · Data via Yahoo Finance</div>
-  <div class="footer-r">Built with Python & Flask · Deployed on Render</div>
-</footer>
 
 <script>
 let chart = null;
+function fmtINR(n){return '₹'+Number(n).toLocaleString('en-IN')}
+function sign(n,d=2){return (n>=0?'+':'')+Number(n).toFixed(d)+'%'}
+function cls(n){return n>=0?'grn':'red'}
 
-function fmtINR(n) {
-  return '₹' + Number(n).toLocaleString('en-IN');
-}
-function sign(n, decimals=2) {
-  return (n >= 0 ? '+' : '') + Number(n).toFixed(decimals) + '%';
-}
-function cls(n) { return n >= 0 ? 'grn' : 'red'; }
-
-function renderChart(d) {
-  const ctx = document.getElementById('perfChart').getContext('2d');
-  if (chart) chart.destroy();
-
-  // purple gradient fill
-  const grad = ctx.createLinearGradient(0, 0, 0, 300);
-  grad.addColorStop(0, 'rgba(124,58,237,0.25)');
-  grad.addColorStop(1, 'rgba(124,58,237,0)');
-
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: d.dates,
-      datasets: [
-        {
-          label: 'Portfolio',
-          data: d.portfolio,
-          borderColor: '#7c3aed',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.4,
-          fill: true,
-          backgroundColor: grad,
-        },
-        {
-          label: 'Nifty 50',
-          data: d.nifty,
-          borderColor: '#4ade80',
-          borderWidth: 1.5,
-          borderDash: [5,4],
-          pointRadius: 0,
-          tension: 0.4,
-          fill: false,
-        },
-        {
-          label: 'S&P 500',
-          data: d.sp500,
-          borderColor: '#60a5fa',
-          borderWidth: 1.5,
-          borderDash: [5,4],
-          pointRadius: 0,
-          tension: 0.4,
-          fill: false,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#10101e',
-          titleColor: '#8b8aad',
-          bodyColor: '#f1f0ff',
-          borderColor: '#1e1e35',
-          borderWidth: 1,
-          padding: 14,
-          callbacks: {
-            label: c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(2) ?? '—'}`
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: '#3d3d5c', font: { size: 10 }, maxTicksLimit: 8 },
-          grid: { color: 'rgba(30,30,53,0.8)' },
-          border: { color: '#1e1e35' }
-        },
-        y: {
-          ticks: { color: '#3d3d5c', font: { size: 10 } },
-          grid: { color: 'rgba(30,30,53,0.8)' },
-          border: { color: '#1e1e35' }
-        }
+function renderChart(d){
+  const ctx=document.getElementById('perfChart').getContext('2d');
+  if(chart)chart.destroy();
+  const grad=ctx.createLinearGradient(0,0,0,250);
+  grad.addColorStop(0,'rgba(167,139,250,0.2)');
+  grad.addColorStop(1,'rgba(167,139,250,0)');
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{labels:d.dates,datasets:[
+      {label:'Portfolio',data:d.portfolio,borderColor:'#a78bfa',borderWidth:2,pointRadius:0,tension:0.4,fill:true,backgroundColor:grad},
+      {label:'Nifty 50',data:d.nifty,borderColor:'#4ade80',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false},
+      {label:'S&P 500',data:d.sp500,borderColor:'#60a5fa',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false}
+    ]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121f',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1,padding:12,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y?.toFixed(2)??'—'}`}}},
+      scales:{
+        x:{ticks:{color:'#3d3d5c',font:{size:10},maxTicksLimit:8},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}},
+        y:{ticks:{color:'#3d3d5c',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}}
       }
     }
   });
 }
 
-function renderHoldings(holdings) {
-  document.getElementById('holdings-body').innerHTML = holdings.map(h => `
+function renderHoldings(holdings){
+  document.getElementById('holdings-body').innerHTML=holdings.map(h=>`
     <tr>
-      <td>
-        <div class="ticker-name">${h.ticker}</div>
-        <div class="ticker-sub">${h.name}</div>
-      </td>
+      <td><div class="ticker-name">${h.ticker}</div><div class="ticker-sub">${h.name}</div></td>
       <td><span class="sector-badge">${h.sector}</span></td>
-      <td style="color:var(--text)">${h.price}</td>
+      <td style="color:var(--text-dark);font-weight:500">${h.price}</td>
       <td class="${cls(h.today_ret)}">${sign(h.today_ret)}</td>
       <td class="${cls(h.total_ret)}">${sign(h.total_ret)}</td>
-      <td style="color:var(--text)">${fmtINR(h.value)}</td>
-      <td>
-        <div class="weight-wrap">
-          <div class="weight-pct">${h.weight.toFixed(1)}%</div>
-          <div class="weight-bar"><div class="weight-fill" style="width:${Math.min(h.weight,100)}%"></div></div>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+      <td style="color:var(--text-dark)">${fmtINR(h.value)}</td>
+      <td><div class="weight-wrap"><div class="weight-pct">${h.weight.toFixed(1)}%</div><div class="weight-bar"><div class="weight-fill" style="width:${Math.min(h.weight,100)}%"></div></div></div></td>
+    </tr>`).join('');
 }
 
-async function fetchData() {
-  try {
-    const res  = await fetch('/api/data');
-    const json = await res.json();
-    if (json.status !== 'ok') throw new Error(json.message);
-    const d = json.data;
-
-    document.getElementById('end-val').textContent = fmtINR(d.end_val);
-    document.getElementById('start-val').textContent = fmtINR(d.start_val);
-    document.getElementById('start-date').textContent = 'Since ' + d.start_date;
-    document.getElementById('updated-at').textContent = d.updated_at;
-
-    const diff = d.end_val - d.start_val;
-    const sub  = document.getElementById('hero-sub');
-    sub.textContent = (diff >= 0 ? '+' : '') + fmtINR(Math.abs(diff)) + '  ·  ' + sign(d.total_ret) + ' since inception';
-    sub.className = 'hero-sub ' + cls(d.total_ret);
-
-    document.getElementById('hero-meta').textContent = 'Paper portfolio · Started ' + d.start_date;
-
-    const tr = document.getElementById('total-ret');
-    tr.textContent = sign(d.total_ret);
-    tr.className = 'kpi-val ' + cls(d.total_ret);
-
-    const alpha = document.getElementById('alpha');
-    alpha.textContent = sign(d.alpha);
-    alpha.className = 'kpi-val ' + cls(d.alpha);
-
-    document.getElementById('sharpe').textContent = Number(d.sharpe).toFixed(2);
-    document.getElementById('max-dd').textContent = sign(d.max_dd);
-    document.getElementById('best-day').textContent = '+' + Number(d.best_day).toFixed(2) + '%';
-    document.getElementById('worst-day').textContent = Number(d.worst_day).toFixed(2) + '%';
-
-    const nr = document.getElementById('nifty-ret');
-    nr.textContent = sign(d.nifty_total);
-    nr.className = 'stat-val ' + cls(d.nifty_total);
-
-    document.getElementById('error-msg').style.display = 'none';
+async function fetchData(){
+  try{
+    const res=await fetch('/api/data');
+    const json=await res.json();
+    if(json.status!=='ok')throw new Error(json.message);
+    const d=json.data;
+    document.getElementById('end-val').textContent=fmtINR(d.end_val);
+    document.getElementById('start-val').textContent=fmtINR(d.start_val);
+    document.getElementById('footer-updated').textContent='Last updated '+d.updated_at+' · Auto-refreshes every 60s';
+    const pill=document.getElementById('today-pill');
+    pill.textContent=(d.today_change>=0?'▲ +':'▼ ')+fmtINR(Math.abs(d.today_change_abs))+' ('+sign(d.today_change)+') Today';
+    pill.className='today-pill '+cls(d.today_change);
+    const tr=document.getElementById('total-ret');
+    tr.textContent=sign(d.total_ret);
+    tr.className='since-ret '+cls(d.total_ret);
+    const alpha=document.getElementById('alpha');
+    alpha.textContent=sign(d.alpha);
+    alpha.className='kpi-val '+cls(d.alpha);
+    document.getElementById('sharpe').textContent=Number(d.sharpe).toFixed(2);
+    document.getElementById('max-dd').textContent=sign(d.max_dd);
+    document.getElementById('best-day').textContent='+'+Number(d.best_day).toFixed(2)+'%';
+    document.getElementById('worst-day').textContent=Number(d.worst_day).toFixed(2)+'%';
+    const nr=document.getElementById('nifty-ret');
+    nr.textContent=sign(d.nifty_total);
+    nr.className='side-val '+cls(d.nifty_total);
+    const sr=document.getElementById('sp500-ret');
+    sr.textContent=sign(d.sp500_total);
+    sr.className='side-val '+cls(d.sp500_total);
+    document.getElementById('error-msg').style.display='none';
     renderChart(d.chart);
     renderHoldings(d.holdings);
-
-  } catch(err) {
-    const e = document.getElementById('error-msg');
-    e.style.display = 'block';
-    e.textContent = 'Error: ' + err.message;
+  }catch(err){
+    const e=document.getElementById('error-msg');
+    e.style.display='block';
+    e.textContent='Error: '+err.message;
   }
 }
 
-function handleRefresh() {
-  const btn = document.getElementById('refresh-btn');
-  btn.classList.add('spinning');
-  btn.disabled = true;
-  fetchData().finally(() => setTimeout(() => {
-    btn.classList.remove('spinning');
-    btn.disabled = false;
-  }, 800));
+function handleRefresh(){
+  const btn=document.getElementById('refresh-btn');
+  btn.classList.add('spinning');btn.disabled=true;
+  fetchData().finally(()=>setTimeout(()=>{btn.classList.remove('spinning');btn.disabled=false;},800));
 }
 
 fetchData();
-setInterval(fetchData, 60000);
+setInterval(fetchData,60000);
 </script>
 </body>
 </html>
