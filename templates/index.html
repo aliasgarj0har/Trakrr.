@@ -385,7 +385,7 @@ function renderHoldingsPage(d){
   pnlEl.className='kpi-val '+(pnl>=0?'grn':'red');
 
   document.getElementById('holdings-body-full').innerHTML=holdings.map(h=>{
-    const pnlH=(h.total_ret/100)*h.value/(1+h.total_ret/100)*h.shares||0;
+    const pnlH=h.value - (h.value/(1+h.total_ret/100));
     return `<tr>
       <td><div class="ticker-name">${h.ticker}</div><div class="ticker-sub">${h.name}</div></td>
       <td><span class="sector-badge">${h.sector}</span></td>
