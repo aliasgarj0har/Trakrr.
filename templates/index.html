@@ -392,7 +392,7 @@ function renderHoldingsPage(d){
       <td style="color:var(--text-dark)">${h.shares}</td>
       <td style="color:var(--text-mid)">—</td>
       <td style="color:var(--text-dark);font-weight:500">${h.price}</td>
-      <td class="${cls(pnlH)}">${pnlH>=0?'+':''}${fmtINR(Math.abs(pnlH))}</td>
+      <td class="${cls(pnlH)}">${pnlH>=0?'+':''}${fmtINR(Math.round(Math.abs(pnlH)))}</td>
       <td class="${cls(h.total_ret)}">${sign(h.total_ret)}</td>
       <td style="color:var(--text-dark)">${fmtINR(h.value)}</td>
       <td><div class="weight-wrap"><div style="font-size:12px">${h.weight.toFixed(1)}%</div><div class="weight-bar"><div class="weight-fill" style="width:${Math.min(h.weight,100)}%"></div></div></div></td>
