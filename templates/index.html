@@ -10,133 +10,244 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --beige:#f5f0e8;--beige2:#ede8df;--beige3:#e0d8cc;--beige4:#faf7f2;
-      --black:#0d0d18;--black2:#12121f;--black3:#1a1a2e;
-      --purple:#7c3aed;--purple-l:#a78bfa;--purple-d:#3b0764;--purple-bg:rgba(124,58,237,0.08);
-      --green:#16a34a;--green-bg:rgba(22,163,74,0.08);--green-border:rgba(22,163,74,0.2);
-      --red:#dc2626;--text-dark:#1a1008;--text-mid:#5a4a3a;--text-muted:#8b7355;
-      --text-faint:#b8a898;--border:#e0d8cc;
+      --black:#07070f;--black2:#0d0d1a;--black3:#13132a;--black4:#1a1a35;
+      --purple:#7c3aed;--purple-l:#a78bfa;--purple-ll:#c4b5fd;--purple-d:#3b0764;
+      --purple-bg:rgba(124,58,237,0.08);--purple-glow:rgba(124,58,237,0.15);
+      --green:#16a34a;--green-l:#4ade80;--green-bg:rgba(22,163,74,0.08);
+      --green-border:rgba(22,163,74,0.2);
+      --red:#dc2626;--red-bg:rgba(220,38,38,0.08);
+      --text-dark:#1a1008;--text-mid:#5a4a3a;--text-muted:#8b7355;
+      --text-faint:#b8a898;--border:#e0d8cc;--border-dark:#1e1e3a;
     }
     html,body{height:100%}
     body{background:var(--beige);color:var(--text-dark);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;min-height:100vh;overflow-x:hidden}
 
-    /* SIDEBAR */
-    .sidebar{width:210px;min-height:100vh;background:var(--black);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:50;border-right:0.5px solid var(--black3)}
-    .s-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:0.5px solid var(--black3);flex-shrink:0}
-    .s-icon{width:32px;height:32px;background:var(--purple);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;box-shadow:0 0 16px rgba(124,58,237,0.4);flex-shrink:0}
-    .s-name{font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px}
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:220px;min-height:100vh;background:var(--black);
+      display:flex;flex-direction:column;
+      position:fixed;left:0;top:0;bottom:0;z-index:50;
+      border-right:0.5px solid var(--border-dark);
+    }
+    .s-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:0.5px solid var(--border-dark);flex-shrink:0}
+    .s-icon{
+      width:34px;height:34px;background:linear-gradient(135deg,#7c3aed,#a78bfa);
+      border-radius:9px;display:flex;align-items:center;justify-content:center;
+      font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+      box-shadow:0 0 20px rgba(124,58,237,0.5),0 0 40px rgba(124,58,237,0.2);
+    }
+    .s-name{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.5px}
     .s-name span{color:var(--purple-l)}
-    .s-nav{padding:16px 0;flex:1}
-    .s-section{font-size:9px;color:#3d3d5c;text-transform:uppercase;letter-spacing:1px;padding:0 20px;margin-bottom:6px;margin-top:16px}
-    .s-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13px;color:#6b6b9a;cursor:pointer;transition:all 0.15s;border-right:2px solid transparent;user-select:none}
-    .s-item:hover{color:#c4b5fd;background:rgba(124,58,237,0.06)}
-    .s-item.active{color:#e8e4ff;background:rgba(124,58,237,0.12);border-right-color:var(--purple)}
-    .s-footer{padding:16px 20px;border-top:0.5px solid var(--black3);font-size:11px;color:#3d3d5c;line-height:1.8;flex-shrink:0}
+    .s-nav{padding:16px 0;flex:1;overflow-y:auto}
+    .s-section{font-size:9px;color:#3d3d6c;text-transform:uppercase;letter-spacing:1.2px;padding:0 20px;margin-bottom:6px;margin-top:20px}
+    .s-item{
+      display:flex;align-items:center;gap:10px;padding:11px 20px;
+      font-size:13px;color:#6b6b9a;cursor:pointer;
+      transition:all 0.2s;border-right:2px solid transparent;
+      position:relative;
+    }
+    .s-item:hover{color:#c4b5fd;background:rgba(124,58,237,0.08)}
+    .s-item.active{color:#e8e4ff;background:rgba(124,58,237,0.15);border-right-color:var(--purple)}
+    .s-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--purple-l);border-radius:0 2px 2px 0;box-shadow:0 0 8px var(--purple)}
+    .s-footer{padding:16px 20px;border-top:0.5px solid var(--border-dark);flex-shrink:0}
+    .s-user{display:flex;align-items:center;gap:10px}
+    .s-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--purple-l));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+    .s-user-info{flex:1;min-width:0}
+    .s-user-name{font-size:12px;font-weight:500;color:#e8e4ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .s-user-sub{font-size:10px;color:#3d3d6c;margin-top:1px}
 
-    /* MAIN */
-    .main-wrapper{margin-left:210px;flex:1;display:flex;flex-direction:column;min-height:100vh;width:calc(100vw - 210px)}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 36px;border-bottom:0.5px solid var(--border);background:rgba(245,240,232,0.97);position:sticky;top:0;z-index:40;backdrop-filter:blur(12px);flex-shrink:0}
-    .topbar-left{display:flex;align-items:center;gap:10px}
-    .page-title{font-size:14px;font-weight:500;color:var(--text-dark)}
+    /* ── MAIN ── */
+    .main-wrapper{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;width:calc(100vw - 220px)}
+
+    /* TOPBAR */
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 36px;border-bottom:0.5px solid var(--border);
+      background:rgba(245,240,232,0.95);
+      position:sticky;top:0;z-index:40;backdrop-filter:blur(16px);flex-shrink:0;
+    }
+    .topbar-left{display:flex;align-items:center;gap:12px}
+    .page-title{font-size:15px;font-weight:600;color:var(--text-dark)}
     .breadcrumb{font-size:12px;color:var(--text-faint)}
     .topbar-right{display:flex;align-items:center;gap:12px}
     .live-pill{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green);background:var(--green-bg);padding:5px 12px;border-radius:20px;border:0.5px solid var(--green-border)}
-    .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+    .pulse{width:6px;height:6px;border-radius:50%;background:var(--green-l);animation:pulse 1.5s infinite;box-shadow:0 0 6px var(--green-l)}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
     .delay-tag{font-size:11px;color:var(--text-faint)}
-    .refresh-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--purple);border:0.5px solid #c4b5fd;background:var(--purple-bg);padding:7px 16px;border-radius:8px;cursor:pointer;transition:all 0.2s}
-    .refresh-btn:hover{background:rgba(124,58,237,0.15);border-color:var(--purple)}
+    .refresh-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--purple);border:0.5px solid var(--purple-ll);background:var(--purple-bg);padding:7px 16px;border-radius:8px;cursor:pointer;transition:all 0.2s;font-weight:500}
+    .refresh-btn:hover{background:rgba(124,58,237,0.15);border-color:var(--purple);box-shadow:0 0 12px rgba(124,58,237,0.2)}
     .refresh-btn.spinning svg{animation:spin 0.7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* PAGES */
-    .page{display:none;padding:32px 36px;flex:1;width:100%}
+    /* ── PAGES ── */
+    .page{display:none;padding:0;flex:1;width:100%}
     .page.active{display:block}
 
-    /* SHARED COMPONENTS */
-    .card{background:#fff;border-radius:12px;padding:20px;border:0.5px solid var(--border);margin-bottom:16px}
-    .card-title{font-size:13px;font-weight:500;color:var(--text-dark);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-    .accent{width:3px;height:18px;background:var(--purple);border-radius:2px;display:inline-block}
-    .section-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px}
-    .grn{color:var(--green)} .red{color:var(--red)} .pur{color:var(--purple)}
+    /* ── HERO SECTION ── */
+    .hero-section{
+      background:linear-gradient(135deg,var(--black) 0%,#0f0820 40%,#130a2a 70%,var(--black2) 100%);
+      padding:40px 36px 36px;position:relative;overflow:hidden;
+    }
+    .hero-glow{
+      position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+      width:600px;height:300px;
+      background:radial-gradient(ellipse,rgba(124,58,237,0.25) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero-glow2{position:absolute;bottom:-40px;right:100px;width:300px;height:200px;background:radial-gradient(ellipse,rgba(167,139,250,0.1) 0%,transparent 70%);pointer-events:none}
+    .hero-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start}
+    .hero-left{}
+    .hero-greeting{font-size:12px;color:var(--purple-l);letter-spacing:0.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .hero-greeting::before{content:'';width:20px;height:1px;background:var(--purple-l);display:inline-block}
+    .hero-label{font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+    .hero-value{font-size:56px;font-weight:700;color:#fff;letter-spacing:-2.5px;line-height:1;margin-bottom:12px;text-shadow:0 0 40px rgba(167,139,250,0.3)}
+    .today-pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 14px;border-radius:20px;font-weight:500}
+    .today-pill.grn{color:var(--green-l);background:rgba(74,222,128,0.1);border:0.5px solid rgba(74,222,128,0.25)}
+    .today-pill.red{color:#f87171;background:rgba(248,113,113,0.1);border:0.5px solid rgba(248,113,113,0.25)}
+    .hero-right{text-align:right}
+    .since-label{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .since-ret{font-size:36px;font-weight:700;letter-spacing:-1px}
+    .since-ret.grn{color:var(--green-l);text-shadow:0 0 20px rgba(74,222,128,0.3)}
+    .since-ret.red{color:#f87171}
 
-    /* OVERVIEW */
-    .hero{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
-    .hero-eyebrow{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
-    .hero-value{font-size:52px;font-weight:600;color:var(--text-dark);letter-spacing:-2px;line-height:1;margin-bottom:10px}
-    .today-pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 14px;border-radius:20px}
-    .today-pill.grn{color:var(--green);background:var(--green-bg);border:0.5px solid var(--green-border)}
-    .today-pill.red{color:var(--red);background:rgba(220,38,38,0.06);border:0.5px solid rgba(220,38,38,0.15)}
-    .since-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
-    .since-ret{font-size:32px;font-weight:600;letter-spacing:-1px}
-    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-    .kpi{background:#fff;border-radius:12px;padding:18px 20px;border:0.5px solid var(--border);transition:box-shadow 0.2s}
-    .kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,0.06)}
-    .kpi-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px}
+    /* KPI STRIP */
+    .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);margin:0;border-top:0.5px solid rgba(255,255,255,0.06)}
+    .kpi-dark{background:rgba(13,13,26,0.8);padding:20px 24px;transition:background 0.2s;cursor:default;backdrop-filter:blur(8px)}
+    .kpi-dark:hover{background:rgba(124,58,237,0.1)}
+    .kpi-label{font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
     .kpi-val{font-size:22px;font-weight:600}
-    .chart-grid{display:grid;grid-template-columns:1fr 220px;gap:16px;margin-bottom:24px}
-    .chart-card{background:var(--black);border-radius:14px;padding:24px;border:0.5px solid var(--black3)}
-    .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
-    .chart-title{font-size:13px;font-weight:500;color:#e8e4ff;margin-bottom:3px}
-    .chart-sub{font-size:11px;color:#3d3d5c}
-    .legend{display:flex;gap:16px}
-    .leg{display:flex;align-items:center;gap:6px;font-size:11px;color:#6b6b9a}
+    .kpi-val.pur{color:var(--purple-l)}
+    .kpi-val.grn{color:var(--green-l)}
+    .kpi-val.red{color:#f87171}
+    .kpi-val.white{color:#fff}
+
+    /* CONTENT */
+    .page-content{padding:28px 36px}
+
+    /* GLASS CARDS */
+    .glass-card{
+      background:rgba(255,255,255,0.85);
+      border:0.5px solid rgba(255,255,255,0.9);
+      border-radius:16px;padding:24px;
+      box-shadow:0 4px 24px rgba(0,0,0,0.06),0 1px 4px rgba(0,0,0,0.04);
+      backdrop-filter:blur(12px);
+      transition:box-shadow 0.2s,transform 0.2s;
+    }
+    .glass-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.1),0 0 0 1px rgba(124,58,237,0.1)}
+    .dark-card{background:var(--black2);border:0.5px solid var(--border-dark);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+    .dark-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.5),transparent)}
+    .card-title{font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .card-title-dark{font-size:13px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:4px}
+    .card-sub-dark{font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:20px}
+    .accent-bar{width:3px;height:18px;background:linear-gradient(180deg,var(--purple),var(--purple-l));border-radius:2px;box-shadow:0 0 8px var(--purple)}
+
+    /* CHART GRID */
+    .chart-grid{display:grid;grid-template-columns:1fr 220px;gap:16px;margin-bottom:20px}
+    .legend{display:flex;gap:16px;flex-wrap:wrap}
+    .leg{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.4)}
     .leg-line{width:16px;height:2px;border-radius:1px}
     .leg-dash{width:16px;height:0;border-top:2px dashed}
+
+    /* SIDE CARDS */
     .side-cards{display:flex;flex-direction:column;gap:12px}
-    .side-card{background:#fff;border-radius:12px;padding:16px 18px;border:0.5px solid var(--border);transition:border-color 0.2s}
-    .side-card:hover{border-color:var(--purple-l)}
+    .side-card{
+      background:rgba(255,255,255,0.9);border-radius:12px;padding:16px 18px;
+      border:0.5px solid var(--border);
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      transition:border-color 0.2s,box-shadow 0.2s;
+    }
+    .side-card:hover{border-color:var(--purple-ll);box-shadow:0 4px 16px rgba(124,58,237,0.08)}
     .side-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:8px}
     .side-val{font-size:18px;font-weight:600;color:var(--text-dark)}
     .side-sub{font-size:10px;color:var(--text-faint);margin-top:3px}
 
-    /* TABLE SHARED */
-    .table-wrap{background:#fff;border-radius:14px;border:0.5px solid var(--border);overflow:hidden;margin-bottom:16px}
-    .table-header-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:0.5px solid var(--border);background:var(--beige4)}
-    .table-header-title{font-size:13px;font-weight:500;color:var(--text-dark);display:flex;align-items:center;gap:8px}
+    /* OVERVIEW TABLE */
+    .table-wrap{background:rgba(255,255,255,0.9);border-radius:16px;border:0.5px solid var(--border);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+    .table-header-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:0.5px solid var(--border);background:var(--beige4)}
+    .table-header-title{font-size:13px;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:8px}
     table{width:100%;border-collapse:collapse}
-    th{font-size:10px;color:var(--text-muted);font-weight:400;text-align:left;padding:12px 20px;border-bottom:0.5px solid var(--border);letter-spacing:0.5px;text-transform:uppercase}
+    th{font-size:10px;color:var(--text-muted);font-weight:500;text-align:left;padding:12px 20px;border-bottom:0.5px solid var(--border);letter-spacing:0.5px;text-transform:uppercase;background:var(--beige4)}
     th:not(:first-child){text-align:right}
-    td{padding:15px 20px;border-bottom:0.5px solid #f5f0e8;font-size:13px;color:var(--text-mid);vertical-align:middle;transition:background 0.15s}
+    td{padding:15px 20px;border-bottom:0.5px solid rgba(224,216,204,0.5);font-size:13px;color:var(--text-mid);vertical-align:middle;transition:background 0.15s}
     td:not(:first-child){text-align:right}
     tr:last-child td{border-bottom:none}
-    tbody tr:hover td{background:#faf7f2}
+    tbody tr:hover td{background:rgba(124,58,237,0.03)}
     .ticker-name{font-size:13px;font-weight:600;color:var(--purple);margin-bottom:2px}
     .ticker-sub{font-size:11px;color:var(--text-faint)}
-    .sector-badge{display:inline-block;font-size:9px;padding:3px 8px;border-radius:4px;background:var(--purple-bg);color:var(--purple);letter-spacing:0.3px;font-weight:500}
-    .weight-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-    .weight-bar{height:3px;background:var(--beige3);border-radius:2px;width:60px}
-    .weight-fill{height:3px;border-radius:2px;background:var(--purple)}
+    .sector-badge{display:inline-block;font-size:9px;padding:3px 9px;border-radius:20px;background:var(--purple-bg);color:var(--purple);letter-spacing:0.3px;font-weight:500;border:0.5px solid rgba(124,58,237,0.15)}
+    .weight-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+    .weight-bar{height:3px;background:var(--beige3);border-radius:2px;width:64px}
+    .weight-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--purple-l));box-shadow:0 0 6px rgba(124,58,237,0.4)}
     .loading-cell{text-align:center;padding:48px;font-size:13px;color:var(--text-faint)}
     #error-msg{display:none;color:var(--red);text-align:center;padding:16px;font-size:13px}
+    .grn{color:var(--green)} .red{color:var(--red)} .pur{color:var(--purple)}
 
     /* HOLDINGS PAGE */
-    .holdings-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-    .pnl-positive{color:var(--green);font-weight:600}
-    .pnl-negative{color:var(--red);font-weight:600}
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+    .summary-card{
+      background:rgba(255,255,255,0.9);border-radius:14px;padding:20px 24px;
+      border:0.5px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      position:relative;overflow:hidden;
+    }
+    .summary-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple-bg),transparent)}
+    .summary-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
+    .summary-val{font-size:26px;font-weight:700;color:var(--text-dark);letter-spacing:-0.5px}
 
-    /* ANALYTICS PAGE */
-    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-    .metric-explainer{background:#fff;border-radius:12px;padding:20px;border:0.5px solid var(--border)}
-    .metric-name{font-size:14px;font-weight:600;color:var(--purple);margin-bottom:4px}
-    .metric-value{font-size:28px;font-weight:600;color:var(--text-dark);margin-bottom:8px}
-    .metric-desc{font-size:13px;color:var(--text-mid);line-height:1.6}
-    .metric-scale{height:6px;background:var(--beige3);border-radius:3px;margin-top:12px;overflow:hidden}
-    .metric-scale-fill{height:6px;border-radius:3px;background:var(--purple)}
-    .dark-chart-card{background:var(--black);border-radius:14px;padding:24px;border:0.5px solid var(--black3);margin-bottom:16px}
+    /* ANALYTICS */
+    .analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+    .metric-card{
+      background:rgba(255,255,255,0.9);border-radius:14px;padding:22px;
+      border:0.5px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      transition:box-shadow 0.2s;
+    }
+    .metric-card:hover{box-shadow:0 8px 24px rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.2)}
+    .metric-tag{font-size:10px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .metric-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--purple);box-shadow:0 0 6px var(--purple)}
+    .metric-value{font-size:32px;font-weight:700;letter-spacing:-1px;margin-bottom:10px}
+    .metric-desc{font-size:12px;color:var(--text-mid);line-height:1.7}
+    .metric-scale{height:4px;background:var(--beige3);border-radius:2px;margin-top:14px;overflow:hidden}
+    .metric-scale-fill{height:4px;border-radius:2px;transition:width 0.8s ease}
+    .risk-table-wrap{background:rgba(255,255,255,0.9);border-radius:14px;border:0.5px solid var(--border);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
 
-    /* HISTORY PAGE */
-    .history-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-    .day-positive{color:var(--green)}
-    .day-negative{color:var(--red)}
+    /* HISTORY */
+    .history-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
 
     /* FOOTER */
     .footer{padding:16px 36px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--beige)}
     .footer-l,.footer-r{font-size:11px;color:var(--text-faint)}
+
+    /* ── MOBILE ── */
+    @media(max-width:768px){
+      .sidebar{width:100%;min-height:auto;height:60px;flex-direction:row;align-items:center;position:fixed;top:0;left:0;right:0;bottom:auto;border-right:none;border-bottom:0.5px solid var(--border-dark);z-index:100;padding:0 16px;justify-content:space-between}
+      .s-logo{padding:0;border:none}
+      .s-nav{display:none}
+      .s-footer{display:none}
+      .mobile-nav{display:flex;gap:0;position:fixed;bottom:0;left:0;right:0;background:var(--black);border-top:0.5px solid var(--border-dark);z-index:100;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+      .m-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;color:#6b6b9a;font-size:10px;transition:color 0.2s;border:none;background:none}
+      .m-nav-item.active{color:var(--purple-l)}
+      .m-nav-item svg{width:18px;height:18px}
+      .main-wrapper{margin-left:0;width:100%;padding-top:60px;padding-bottom:70px}
+      .topbar{display:none}
+      .hero-section{padding:24px 16px 0}
+      .hero-value{font-size:38px}
+      .since-ret{font-size:24px}
+      .kpi-strip{grid-template-columns:repeat(2,1fr)}
+      .page-content{padding:16px}
+      .chart-grid{grid-template-columns:1fr}
+      .side-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .analytics-grid{grid-template-columns:1fr}
+      .summary-grid{grid-template-columns:1fr}
+      .history-stats{grid-template-columns:1fr}
+      .footer{display:none}
+      table{font-size:12px}
+      th,td{padding:10px 12px}
+    }
+    @media(min-width:769px){.mobile-nav{display:none}}
   </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR (desktop) -->
 <div class="sidebar">
   <div class="s-logo">
     <div class="s-icon">T</div>
@@ -145,24 +256,52 @@
   <div class="s-nav">
     <div class="s-section">Portfolio</div>
     <div class="s-item active" onclick="showPage('overview',this)">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Overview
     </div>
     <div class="s-item" onclick="showPage('holdings',this)">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Holdings
     </div>
     <div class="s-section">Analysis</div>
     <div class="s-item" onclick="showPage('analytics',this)">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Analytics
     </div>
     <div class="s-item" onclick="showPage('history',this)">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
       History
     </div>
   </div>
-  <div class="s-footer">Paper Portfolio · Since 01 Jan 2026</div>
+  <div class="s-footer">
+    <div class="s-user">
+      <div class="s-avatar">A</div>
+      <div class="s-user-info">
+        <div class="s-user-name">Aliasgar Johar</div>
+        <div class="s-user-sub">Paper Portfolio</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav">
+  <button class="m-nav-item active" onclick="showPage('overview',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Overview
+  </button>
+  <button class="m-nav-item" onclick="showPage('holdings',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    Holdings
+  </button>
+  <button class="m-nav-item" onclick="showPage('analytics',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Analytics
+  </button>
+  <button class="m-nav-item" onclick="showPage('history',this)">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+    History
+  </button>
 </div>
 
 <!-- MAIN -->
@@ -182,132 +321,137 @@
     </div>
   </div>
 
-  <!-- OVERVIEW PAGE -->
+  <!-- OVERVIEW -->
   <div class="page active" id="page-overview">
-    <div class="hero">
-      <div>
-        <div class="hero-eyebrow">Portfolio value</div>
-        <div class="hero-value" id="end-val">—</div>
-        <div class="today-pill grn" id="today-pill">Loading...</div>
-      </div>
-      <div style="text-align:right">
-        <div class="since-label">Since inception</div>
-        <div class="since-ret" id="total-ret">—</div>
-      </div>
-    </div>
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-label">vs Nifty 50</div><div class="kpi-val" id="alpha">—</div></div>
-      <div class="kpi"><div class="kpi-label">Sharpe ratio</div><div class="kpi-val pur" id="sharpe">—</div></div>
-      <div class="kpi"><div class="kpi-label">Max drawdown</div><div class="kpi-val red" id="max-dd">—</div></div>
-      <div class="kpi"><div class="kpi-label">Best day</div><div class="kpi-val grn" id="best-day">—</div></div>
-    </div>
-    <div class="chart-grid">
-      <div class="chart-card">
-        <div class="chart-header">
-          <div><div class="chart-title">Performance — indexed to 100</div><div class="chart-sub">Since 1 Jan 2026 · 15 min delay</div></div>
-          <div class="legend">
-            <div class="leg"><div class="leg-line" style="background:#a78bfa"></div>Portfolio</div>
-            <div class="leg"><div class="leg-dash" style="border-color:#4ade80"></div>Nifty 50</div>
-            <div class="leg"><div class="leg-dash" style="border-color:#60a5fa"></div>S&amp;P 500</div>
-          </div>
+    <div class="hero-section">
+      <div class="hero-glow"></div>
+      <div class="hero-glow2"></div>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-greeting">Paper Portfolio · Since 01 Jan 2026</div>
+          <div class="hero-label">Total Portfolio Value</div>
+          <div class="hero-value" id="end-val">—</div>
+          <div class="today-pill grn" id="today-pill">Loading...</div>
         </div>
-        <canvas id="perfChart" height="90"></canvas>
-      </div>
-      <div class="side-cards">
-        <div class="side-card"><div class="side-label">Starting value</div><div class="side-val" id="start-val">—</div><div class="side-sub">01 Jan 2026</div></div>
-        <div class="side-card"><div class="side-label">Nifty 50 return</div><div class="side-val" id="nifty-ret">—</div><div class="side-sub">Same period</div></div>
-        <div class="side-card"><div class="side-label">S&amp;P 500 return</div><div class="side-val" id="sp500-ret">—</div><div class="side-sub">Same period</div></div>
-        <div class="side-card"><div class="side-label">Worst day</div><div class="side-val red" id="worst-day">—</div><div class="side-sub">Max single-day loss</div></div>
+        <div class="hero-right">
+          <div class="since-label">Since Inception</div>
+          <div class="since-ret grn" id="total-ret">—</div>
+        </div>
       </div>
     </div>
-    <div id="error-msg"></div>
-    <div class="table-wrap">
-      <div class="table-header-row"><div class="table-header-title"><div class="accent"></div>Holdings</div></div>
-      <table><thead><tr><th>Stock</th><th>Sector</th><th>Price</th><th>Today</th><th>Return</th><th>Value (₹)</th><th>Weight</th></tr></thead>
-      <tbody id="holdings-body-ov"><tr><td colspan="7" class="loading-cell">Fetching live data...</td></tr></tbody></table>
+    <div class="kpi-strip">
+      <div class="kpi-dark"><div class="kpi-label">Alpha vs Nifty 50</div><div class="kpi-val" id="alpha">—</div></div>
+      <div class="kpi-dark"><div class="kpi-label">Sharpe Ratio</div><div class="kpi-val pur" id="sharpe">—</div></div>
+      <div class="kpi-dark"><div class="kpi-label">Max Drawdown</div><div class="kpi-val red" id="max-dd">—</div></div>
+      <div class="kpi-dark"><div class="kpi-label">Best Day</div><div class="kpi-val grn" id="best-day">—</div></div>
+    </div>
+    <div class="page-content">
+      <div class="chart-grid">
+        <div class="dark-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+            <div><div class="card-title-dark">Performance — indexed to 100</div><div class="card-sub-dark">Since 1 Jan 2026 · 15 min delay</div></div>
+            <div class="legend">
+              <div class="leg"><div class="leg-line" style="background:var(--purple-l)"></div>Portfolio</div>
+              <div class="leg"><div class="leg-dash" style="border-color:#4ade80"></div>Nifty 50</div>
+              <div class="leg"><div class="leg-dash" style="border-color:#60a5fa"></div>S&amp;P 500</div>
+            </div>
+          </div>
+          <canvas id="perfChart" height="90"></canvas>
+        </div>
+        <div class="side-cards">
+          <div class="side-card"><div class="side-label">Starting value</div><div class="side-val" id="start-val">—</div><div class="side-sub">01 Jan 2026</div></div>
+          <div class="side-card"><div class="side-label">Nifty 50 return</div><div class="side-val" id="nifty-ret">—</div><div class="side-sub">Same period</div></div>
+          <div class="side-card"><div class="side-label">S&amp;P 500 return</div><div class="side-val" id="sp500-ret">—</div><div class="side-sub">Same period</div></div>
+          <div class="side-card"><div class="side-label">Worst day</div><div class="side-val red" id="worst-day">—</div><div class="side-sub">Max single-day loss</div></div>
+        </div>
+      </div>
+      <div id="error-msg"></div>
+      <div class="table-wrap">
+        <div class="table-header-row"><div class="table-header-title"><div class="accent-bar"></div>Holdings</div></div>
+        <table><thead><tr><th>Stock</th><th>Sector</th><th>Price</th><th>Today</th><th>Return</th><th>Value (₹)</th><th>Weight</th></tr></thead>
+        <tbody id="holdings-body-ov"><tr><td colspan="7" class="loading-cell">Fetching live data...</td></tr></tbody></table>
+      </div>
     </div>
   </div>
 
-  <!-- HOLDINGS PAGE -->
+  <!-- HOLDINGS -->
   <div class="page" id="page-holdings">
-    <div class="holdings-summary" id="holdings-summary">
-      <div class="kpi"><div class="kpi-label">Total invested</div><div class="kpi-val" id="h-invested">—</div></div>
-      <div class="kpi"><div class="kpi-label">Current value</div><div class="kpi-val" id="h-value">—</div></div>
-      <div class="kpi"><div class="kpi-label">Total P&amp;L</div><div class="kpi-val" id="h-pnl">—</div></div>
-    </div>
-    <div class="table-wrap">
-      <div class="table-header-row"><div class="table-header-title"><div class="accent"></div>Detailed Holdings</div></div>
-      <table><thead><tr><th>Stock</th><th>Sector</th><th>Shares</th><th>Avg Buy Price</th><th>Current Price</th><th>P&amp;L (₹)</th><th>Return %</th><th>Value (₹)</th><th>Weight</th></tr></thead>
-      <tbody id="holdings-body-full"><tr><td colspan="9" class="loading-cell">Loading...</td></tr></tbody></table>
-    </div>
-    <div class="chart-grid" style="margin-top:16px">
-      <div class="card">
-        <div class="card-title"><div class="accent"></div>Portfolio Allocation</div>
-        <canvas id="allocChart" height="80"></canvas>
+    <div class="page-content">
+      <div class="summary-grid">
+        <div class="summary-card"><div class="summary-label">Total Invested</div><div class="summary-val" id="h-invested">—</div></div>
+        <div class="summary-card"><div class="summary-label">Current Value</div><div class="summary-val" id="h-value">—</div></div>
+        <div class="summary-card"><div class="summary-label">Total P&amp;L</div><div class="summary-val" id="h-pnl">—</div></div>
       </div>
-      <div class="card">
-        <div class="card-title"><div class="accent"></div>Return by Stock</div>
-        <canvas id="returnChart" height="80"></canvas>
+      <div class="table-wrap" style="margin-bottom:20px">
+        <div class="table-header-row"><div class="table-header-title"><div class="accent-bar"></div>Detailed Holdings</div></div>
+        <table><thead><tr><th>Stock</th><th>Sector</th><th>Shares</th><th>Current Price</th><th>P&amp;L (₹)</th><th>Return %</th><th>Value (₹)</th><th>Weight</th></tr></thead>
+        <tbody id="holdings-body-full"><tr><td colspan="8" class="loading-cell">Loading...</td></tr></tbody></table>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="glass-card"><div class="card-title"><div class="accent-bar"></div>Portfolio Allocation</div><canvas id="allocChart" height="90"></canvas></div>
+        <div class="glass-card"><div class="card-title"><div class="accent-bar"></div>Return by Stock</div><canvas id="returnChart" height="90"></canvas></div>
       </div>
     </div>
   </div>
 
-  <!-- ANALYTICS PAGE -->
+  <!-- ANALYTICS -->
   <div class="page" id="page-analytics">
-    <div class="analytics-grid">
-      <div class="metric-explainer">
-        <div class="metric-name">Sharpe Ratio</div>
-        <div class="metric-value pur" id="a-sharpe">—</div>
-        <div class="metric-desc">Measures return per unit of risk. A ratio above 1.0 is good — it means you're being rewarded for the volatility you're taking on. Below 0 means the risk wasn't worth it.</div>
-        <div class="metric-scale"><div class="metric-scale-fill" id="sharpe-bar" style="width:0%"></div></div>
+    <div class="page-content">
+      <div class="analytics-grid">
+        <div class="metric-card">
+          <div class="metric-tag">Sharpe Ratio</div>
+          <div class="metric-value pur" id="a-sharpe">—</div>
+          <div class="metric-desc">Measures return per unit of risk. Above 1.0 is good — you're being rewarded for the volatility you're taking on. Below 0 means the risk wasn't worth it.</div>
+          <div class="metric-scale"><div class="metric-scale-fill" id="sharpe-bar" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--purple-l))"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-tag">Max Drawdown</div>
+          <div class="metric-value red" id="a-maxdd">—</div>
+          <div class="metric-desc">The biggest peak-to-trough loss your portfolio experienced. If your portfolio hit ₹2L then fell to ₹1.8L before recovering, your max drawdown was -10%. Lower is better.</div>
+          <div class="metric-scale"><div class="metric-scale-fill" id="dd-bar" style="width:0%;background:linear-gradient(90deg,#dc2626,#f87171)"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-tag">Alpha vs Nifty 50</div>
+          <div class="metric-value" id="a-alpha">—</div>
+          <div class="metric-desc">How much your portfolio beat (or missed) the Nifty 50 benchmark. Positive alpha means your stock picks outperformed just buying the index — this is what active investing is judged by.</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-tag">Total Return</div>
+          <div class="metric-value" id="a-totalret">—</div>
+          <div class="metric-desc">Your portfolio's total gain or loss since inception. This is the simplest measure of how your investments have performed from the day you started.</div>
+        </div>
       </div>
-      <div class="metric-explainer">
-        <div class="metric-name">Max Drawdown</div>
-        <div class="metric-value red" id="a-maxdd">—</div>
-        <div class="metric-desc">The biggest peak-to-trough loss your portfolio experienced. If your portfolio hit ₹2L then fell to ₹1.8L before recovering, your max drawdown was -10%. Lower is better.</div>
-        <div class="metric-scale"><div class="metric-scale-fill" id="dd-bar" style="width:0%;background:#dc2626"></div></div>
+      <div class="dark-card" style="margin-bottom:20px">
+        <div class="card-title-dark">Daily Returns Distribution</div>
+        <div class="card-sub-dark">How often your portfolio had good vs bad days</div>
+        <canvas id="dailyChart" height="70"></canvas>
       </div>
-      <div class="metric-explainer">
-        <div class="metric-name">Alpha vs Nifty 50</div>
-        <div class="metric-value" id="a-alpha">—</div>
-        <div class="metric-desc">How much your portfolio beat (or missed) the Nifty 50 benchmark. Positive alpha means your stock picks outperformed just buying the index. This is what active investing is judged by.</div>
+      <div class="risk-table-wrap">
+        <div class="table-header-row"><div class="table-header-title"><div class="accent-bar"></div>Risk Summary vs Benchmarks</div></div>
+        <table><thead><tr><th>Metric</th><th>Your Portfolio</th><th>Nifty 50</th></tr></thead>
+        <tbody id="risk-table"><tr><td colspan="3" class="loading-cell">Loading...</td></tr></tbody></table>
       </div>
-      <div class="metric-explainer">
-        <div class="metric-name">Daily Volatility</div>
-        <div class="metric-value" id="a-vol">—</div>
-        <div class="metric-desc">The average daily price swing of your portfolio. Higher volatility means bigger swings — both up and down. Compare this to Nifty 50's volatility to understand your risk level.</div>
-      </div>
-    </div>
-    <div class="dark-chart-card">
-      <div class="chart-header" style="margin-bottom:20px">
-        <div><div class="chart-title">Daily Returns Distribution</div><div class="chart-sub">How often your portfolio had good vs bad days</div></div>
-      </div>
-      <canvas id="dailyChart" height="70"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="accent"></div>Risk Summary — Your Portfolio vs Benchmarks</div>
-      <table><thead><tr><th>Metric</th><th>Your Portfolio</th><th>Nifty 50</th></tr></thead>
-      <tbody id="risk-table"><tr><td colspan="3" class="loading-cell">Loading...</td></tr></tbody></table>
     </div>
   </div>
 
-  <!-- HISTORY PAGE -->
+  <!-- HISTORY -->
   <div class="page" id="page-history">
-    <div class="history-stats">
-      <div class="kpi"><div class="kpi-label">Trading days tracked</div><div class="kpi-val" id="h-days">—</div></div>
-      <div class="kpi"><div class="kpi-label">Positive days</div><div class="kpi-val grn" id="h-pos">—</div></div>
-      <div class="kpi"><div class="kpi-label">Negative days</div><div class="kpi-val red" id="h-neg">—</div></div>
-    </div>
-    <div class="dark-chart-card">
-      <div class="chart-header" style="margin-bottom:20px">
-        <div><div class="chart-title">Portfolio Value Over Time</div><div class="chart-sub">Daily closing value since inception</div></div>
+    <div class="page-content">
+      <div class="history-stats">
+        <div class="glass-card" style="padding:20px 24px"><div class="summary-label">Trading Days Tracked</div><div class="summary-val" id="h-days">—</div></div>
+        <div class="glass-card" style="padding:20px 24px"><div class="summary-label">Positive Days</div><div class="summary-val grn" id="h-pos">—</div></div>
+        <div class="glass-card" style="padding:20px 24px"><div class="summary-label">Negative Days</div><div class="summary-val red" id="h-neg">—</div></div>
       </div>
-      <canvas id="historyChart" height="80"></canvas>
-    </div>
-    <div class="table-wrap">
-      <div class="table-header-row"><div class="table-header-title"><div class="accent"></div>Daily Log</div></div>
-      <table><thead><tr><th>Date</th><th>Portfolio Value</th><th>Daily Change (₹)</th><th>Daily Return %</th></tr></thead>
-      <tbody id="history-body"><tr><td colspan="4" class="loading-cell">Loading...</td></tr></tbody></table>
+      <div class="dark-card" style="margin-bottom:20px">
+        <div class="card-title-dark">Portfolio Value Over Time</div>
+        <div class="card-sub-dark">Daily closing value since inception</div>
+        <canvas id="historyChart" height="80"></canvas>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header-row"><div class="table-header-title"><div class="accent-bar"></div>Daily Log</div></div>
+        <table><thead><tr><th>Date</th><th>Portfolio Value</th><th>Daily Change (₹)</th><th>Daily Return %</th></tr></thead>
+        <tbody id="history-body"><tr><td colspan="4" class="loading-cell">Loading...</td></tr></tbody></table>
+      </div>
     </div>
   </div>
 
@@ -318,46 +462,43 @@
 </div>
 
 <script>
-let perfChart=null, allocChart=null, returnChart=null, dailyChart=null, historyChart=null;
+let perfChart=null,allocChart=null,returnChart=null,dailyChart=null,historyChart=null;
 let cachedData=null;
 
 function fmtINR(n){return '₹'+Number(n).toLocaleString('en-IN')}
 function sign(n,d=2){return (n>=0?'+':'')+Number(n).toFixed(d)+'%'}
 function cls(n){return n>=0?'grn':'red'}
-function safeNum(v){return (v===null||v===undefined||isNaN(v))?0:Number(v)}
+function safeNum(v){return(v===null||v===undefined||isNaN(v))?0:Number(v)}
 
-function showPage(id, el){
+function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.s-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.s-item,.m-nav-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  el.classList.add('active');
+  // activate all nav items with same page
+  document.querySelectorAll(`[onclick="showPage('${id}',this)"]`).forEach(i=>i.classList.add('active'));
   const titles={overview:'Overview',holdings:'Holdings',analytics:'Analytics',history:'History'};
   document.getElementById('topbar-title').textContent=titles[id];
   if(cachedData){
-    if(id==='holdings') renderHoldingsPage(cachedData);
-    if(id==='analytics') renderAnalyticsPage(cachedData);
-    if(id==='history') renderHistoryPage(cachedData);
+    if(id==='holdings')renderHoldingsPage(cachedData);
+    if(id==='analytics')renderAnalyticsPage(cachedData);
+    if(id==='history')renderHistoryPage(cachedData);
   }
 }
 
 function renderPerfChart(d){
   const ctx=document.getElementById('perfChart').getContext('2d');
   if(perfChart)perfChart.destroy();
-  const grad=ctx.createLinearGradient(0,0,0,250);
-  grad.addColorStop(0,'rgba(167,139,250,0.2)');
+  const grad=ctx.createLinearGradient(0,0,0,280);
+  grad.addColorStop(0,'rgba(167,139,250,0.25)');
   grad.addColorStop(1,'rgba(167,139,250,0)');
-  perfChart=new Chart(ctx,{
-    type:'line',
-    data:{labels:d.dates,datasets:[
-      {label:'Portfolio',data:d.portfolio,borderColor:'#a78bfa',borderWidth:2,pointRadius:0,tension:0.4,fill:true,backgroundColor:grad},
-      {label:'Nifty 50',data:d.nifty,borderColor:'#4ade80',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false},
-      {label:'S&P 500',data:d.sp500,borderColor:'#60a5fa',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false}
-    ]},
-    options:{responsive:true,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121f',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1,padding:12}},
-      scales:{x:{ticks:{color:'#3d3d5c',font:{size:10},maxTicksLimit:8},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}},
-              y:{ticks:{color:'#3d3d5c',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}}}}
-  });
+  perfChart=new Chart(ctx,{type:'line',data:{labels:d.dates,datasets:[
+    {label:'Portfolio',data:d.portfolio,borderColor:'#a78bfa',borderWidth:2.5,pointRadius:0,tension:0.4,fill:true,backgroundColor:grad},
+    {label:'Nifty 50',data:d.nifty,borderColor:'#4ade80',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false},
+    {label:'S&P 500',data:d.sp500,borderColor:'#60a5fa',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.4,fill:false}
+  ]},options:{responsive:true,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d1a',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1e1e3a',borderWidth:1,padding:14,cornerRadius:8}},
+    scales:{x:{ticks:{color:'#3d3d6c',font:{size:10},maxTicksLimit:8},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}},
+            y:{ticks:{color:'#3d3d6c',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}}}}});
 }
 
 function renderHoldingsTableOv(holdings){
@@ -375,119 +516,79 @@ function renderHoldingsTableOv(holdings){
 
 function renderHoldingsPage(d){
   const holdings=d.holdings;
-  const totalVal=safeNum(d.end_val);
-  const startVal=safeNum(d.start_val);
-  const pnl=totalVal-startVal;
+  const totalVal=safeNum(d.end_val),startVal=safeNum(d.start_val),pnl=totalVal-startVal;
   document.getElementById('h-invested').textContent=fmtINR(startVal);
   document.getElementById('h-value').textContent=fmtINR(totalVal);
   const pnlEl=document.getElementById('h-pnl');
-  pnlEl.textContent=(pnl>=0?'+':'')+fmtINR(Math.abs(pnl));
-  pnlEl.className='kpi-val '+(pnl>=0?'grn':'red');
-
+  pnlEl.textContent=(pnl>=0?'+':'')+fmtINR(Math.abs(Math.round(pnl)));
+  pnlEl.className='summary-val '+(pnl>=0?'grn':'red');
   document.getElementById('holdings-body-full').innerHTML=holdings.map(h=>{
-    const pnlH=h.value - (h.value/(1+h.total_ret/100));
+    const pnlH=h.value-(h.value/(1+h.total_ret/100));
     return `<tr>
       <td><div class="ticker-name">${h.ticker}</div><div class="ticker-sub">${h.name}</div></td>
       <td><span class="sector-badge">${h.sector}</span></td>
-      <td style="color:var(--text-dark)">${h.shares}</td>
-      <td style="color:var(--text-mid)">—</td>
+      <td style="color:var(--text-dark)">${h.shares||'—'}</td>
       <td style="color:var(--text-dark);font-weight:500">${h.price}</td>
       <td class="${cls(pnlH)}">${pnlH>=0?'+':''}${fmtINR(Math.round(Math.abs(pnlH)))}</td>
       <td class="${cls(h.total_ret)}">${sign(h.total_ret)}</td>
       <td style="color:var(--text-dark)">${fmtINR(h.value)}</td>
       <td><div class="weight-wrap"><div style="font-size:12px">${h.weight.toFixed(1)}%</div><div class="weight-bar"><div class="weight-fill" style="width:${Math.min(h.weight,100)}%"></div></div></div></td>
-    </tr>`;
-  }).join('');
-
-  // Allocation donut
+    </tr>`;}).join('');
   if(allocChart)allocChart.destroy();
   const actx=document.getElementById('allocChart').getContext('2d');
-  allocChart=new Chart(actx,{
-    type:'doughnut',
-    data:{labels:holdings.map(h=>h.ticker),datasets:[{data:holdings.map(h=>h.weight),backgroundColor:['#7c3aed','#a78bfa','#c4b5fd','#4ade80','#60a5fa'],borderWidth:0}]},
-    options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#5a4a3a',font:{size:11},boxWidth:12}},tooltip:{backgroundColor:'#12121f',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1}},cutout:'65%'}
-  });
-
-  // Return bar chart
+  allocChart=new Chart(actx,{type:'doughnut',data:{labels:holdings.map(h=>h.ticker),datasets:[{data:holdings.map(h=>h.weight),backgroundColor:['#7c3aed','#a78bfa','#c4b5fd','#4ade80','#60a5fa'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#5a4a3a',font:{size:11},boxWidth:12,padding:8}},tooltip:{backgroundColor:'#0d0d1a',bodyColor:'#e8e4ff',borderColor:'#1e1e3a',borderWidth:1}},cutout:'68%'}});
   if(returnChart)returnChart.destroy();
   const rctx=document.getElementById('returnChart').getContext('2d');
-  returnChart=new Chart(rctx,{
-    type:'bar',
-    data:{labels:holdings.map(h=>h.ticker),datasets:[{label:'Return %',data:holdings.map(h=>h.total_ret),backgroundColor:holdings.map(h=>h.total_ret>=0?'rgba(22,163,74,0.7)':'rgba(220,38,38,0.7)'),borderRadius:4}]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121f',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1,callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}},scales:{x:{ticks:{color:'#8b7355',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#8b7355',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.04)'}}}}
-  });
+  returnChart=new Chart(rctx,{type:'bar',data:{labels:holdings.map(h=>h.ticker),datasets:[{label:'Return %',data:holdings.map(h=>h.total_ret),backgroundColor:holdings.map(h=>h.total_ret>=0?'rgba(74,222,128,0.7)':'rgba(248,113,113,0.7)'),borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d1a',bodyColor:'#e8e4ff',borderColor:'#1e1e3a',borderWidth:1,callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}},scales:{x:{ticks:{color:'#8b7355',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#8b7355',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.04)'}}}}});
 }
 
 function renderAnalyticsPage(d){
-  const sharpe=safeNum(d.sharpe);
-  const maxdd=safeNum(d.max_dd);
-  const alpha=safeNum(d.alpha);
-
+  const sharpe=safeNum(d.sharpe),maxdd=safeNum(d.max_dd),alpha=safeNum(d.alpha);
   document.getElementById('a-sharpe').textContent=sharpe.toFixed(2);
   document.getElementById('a-sharpe').className='metric-value '+(sharpe>=1?'grn':sharpe>=0?'pur':'red');
   document.getElementById('a-maxdd').textContent=sign(maxdd);
   document.getElementById('a-alpha').textContent=sign(alpha);
   document.getElementById('a-alpha').className='metric-value '+(alpha>=0?'grn':'red');
-  document.getElementById('a-vol').textContent='—';
-
-  const sharpeScale=Math.min(Math.max((sharpe+1)/3*100,0),100);
-  document.getElementById('sharpe-bar').style.width=sharpeScale+'%';
+  document.getElementById('a-totalret').textContent=sign(safeNum(d.total_ret));
+  document.getElementById('a-totalret').className='metric-value '+(d.total_ret>=0?'grn':'red');
+  document.getElementById('sharpe-bar').style.width=Math.min(Math.max((sharpe+1)/3*100,0),100)+'%';
   document.getElementById('dd-bar').style.width=Math.min(Math.abs(maxdd)*5,100)+'%';
-
-  // Daily returns bar chart
   if(dailyChart)dailyChart.destroy();
   const dctx=document.getElementById('dailyChart').getContext('2d');
   const dailyData=d.chart.portfolio.map((v,i,arr)=>i===0?0:arr[i]&&arr[i-1]?((v-arr[i-1])/arr[i-1]*100):0).slice(1);
-  const dailyLabels=d.chart.dates.slice(1);
-  dailyChart=new Chart(dctx,{
-    type:'bar',
-    data:{labels:dailyLabels,datasets:[{label:'Daily Return %',data:dailyData,backgroundColor:dailyData.map(v=>v>=0?'rgba(74,222,128,0.6)':'rgba(248,113,113,0.6)'),borderWidth:0}]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121f',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1,callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}},scales:{x:{ticks:{color:'#3d3d5c',font:{size:9},maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}},y:{ticks:{color:'#3d3d5c',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}}}}
-  });
-
-  // Risk table
+  dailyChart=new Chart(dctx,{type:'bar',data:{labels:d.chart.dates.slice(1),datasets:[{label:'Daily Return %',data:dailyData,backgroundColor:dailyData.map(v=>v>=0?'rgba(74,222,128,0.6)':'rgba(248,113,113,0.6)'),borderWidth:0,borderRadius:2}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d1a',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1e1e3a',borderWidth:1,callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}},scales:{x:{ticks:{color:'#3d3d6c',font:{size:9},maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}},y:{ticks:{color:'#3d3d6c',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}}}}});
   document.getElementById('risk-table').innerHTML=`
     <tr><td>Total Return</td><td class="${cls(d.total_ret)}">${sign(d.total_ret)}</td><td class="${cls(d.nifty_total)}">${sign(d.nifty_total)}</td></tr>
     <tr><td>Best Day</td><td class="grn">+${safeNum(d.best_day).toFixed(2)}%</td><td>—</td></tr>
     <tr><td>Worst Day</td><td class="red">${sign(d.worst_day)}</td><td>—</td></tr>
     <tr><td>Max Drawdown</td><td class="red">${sign(d.max_dd)}</td><td>—</td></tr>
-    <tr><td>Sharpe Ratio</td><td class="${cls(sharpe)}">${sharpe.toFixed(2)}</td><td>—</td></tr>
-  `;
+    <tr><td>Sharpe Ratio</td><td class="${cls(sharpe)}">${sharpe.toFixed(2)}</td><td>—</td></tr>`;
 }
 
 function renderHistoryPage(d){
   const portfolio=d.chart.portfolio.filter(v=>v!==null);
-  const dates=d.chart.dates;
   const posdays=portfolio.filter((v,i)=>i>0&&v>portfolio[i-1]).length;
   const negdays=portfolio.filter((v,i)=>i>0&&v<portfolio[i-1]).length;
   document.getElementById('h-days').textContent=portfolio.length;
   document.getElementById('h-pos').textContent=posdays;
   document.getElementById('h-neg').textContent=negdays;
-
   if(historyChart)historyChart.destroy();
   const hctx=document.getElementById('historyChart').getContext('2d');
   const startVal=safeNum(d.start_val);
   const portfolioValues=d.chart.portfolio.map(v=>v===null?null:((v/100)*startVal));
-  const grad=hctx.createLinearGradient(0,0,0,200);
-  grad.addColorStop(0,'rgba(124,58,237,0.25)');
+  const grad=hctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(124,58,237,0.3)');
   grad.addColorStop(1,'rgba(124,58,237,0)');
-  historyChart=new Chart(hctx,{
-    type:'line',
-    data:{labels:dates,datasets:[{label:'Portfolio Value',data:portfolioValues,borderColor:'#a78bfa',borderWidth:2,pointRadius:0,tension:0.4,fill:true,backgroundColor:grad}]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#12121f',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1a1a2e',borderWidth:1,callbacks:{label:c=>` ₹${Number(c.parsed.y).toLocaleString('en-IN')}`}}},scales:{x:{ticks:{color:'#3d3d5c',font:{size:10},maxTicksLimit:8},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}},y:{ticks:{color:'#3d3d5c',font:{size:10},callback:v=>'₹'+Number(v).toLocaleString('en-IN')},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1a1a2e'}}}}
-  });
-
+  historyChart=new Chart(hctx,{type:'line',data:{labels:d.chart.dates,datasets:[{label:'Portfolio Value',data:portfolioValues,borderColor:'#a78bfa',borderWidth:2.5,pointRadius:0,tension:0.4,fill:true,backgroundColor:grad}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d1a',titleColor:'#6b6b9a',bodyColor:'#e8e4ff',borderColor:'#1e1e3a',borderWidth:1,callbacks:{label:c=>` ₹${Number(c.parsed.y).toLocaleString('en-IN')}`}}},scales:{x:{ticks:{color:'#3d3d6c',font:{size:10},maxTicksLimit:8},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}},y:{ticks:{color:'#3d3d6c',font:{size:10},callback:v=>'₹'+Number(v).toLocaleString('en-IN')},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'#1e1e3a'}}}}});
   const rows=portfolioValues.map((v,i)=>{
     if(v===null)return '';
     const prev=portfolioValues[i-1];
-    const change=prev?v-prev:0;
-    const ret=prev?(change/prev*100):0;
-    return `<tr>
-      <td style="color:var(--text-mid)">${dates[i]}</td>
-      <td style="color:var(--text-dark);font-weight:500">${fmtINR(Math.round(v))}</td>
-      <td class="${cls(change)}">${change>=0?'+':''}${fmtINR(Math.round(Math.abs(change)))}</td>
-      <td class="${cls(ret)}">${sign(ret)}</td>
-    </tr>`;
+    const change=prev?v-prev:0,ret=prev?(change/prev*100):0;
+    return `<tr><td style="color:var(--text-mid)">${d.chart.dates[i]}</td><td style="color:var(--text-dark);font-weight:500">${fmtINR(Math.round(v))}</td><td class="${cls(change)}">${change>=0?'+':''}${fmtINR(Math.round(Math.abs(change)))}</td><td class="${cls(ret)}">${sign(ret)}</td></tr>`;
   }).reverse().join('');
   document.getElementById('history-body').innerHTML=rows||'<tr><td colspan="4" class="loading-cell">No data</td></tr>';
 }
@@ -497,16 +598,13 @@ async function fetchData(){
     const res=await fetch('/api/data');
     const json=await res.json();
     if(json.status!=='ok')throw new Error(json.message);
-    const d=json.data;
-    cachedData=d;
-
-    // Overview
+    const d=json.data;cachedData=d;
     document.getElementById('end-val').textContent=fmtINR(safeNum(d.end_val));
     document.getElementById('start-val').textContent=fmtINR(safeNum(d.start_val));
     document.getElementById('footer-updated').textContent='Last updated '+d.updated_at+' · Auto-refreshes every 60s';
-    const tc=safeNum(d.today_change), ta=safeNum(d.today_change_abs);
+    const tc=safeNum(d.today_change),ta=safeNum(d.today_change_abs);
     const pill=document.getElementById('today-pill');
-    pill.textContent=(tc>=0?'▲ +':'▼ ')+fmtINR(Math.abs(ta))+' ('+sign(tc)+') Today';
+    pill.textContent=(tc>=0?'▲ +':'▼ ')+fmtINR(Math.abs(Math.round(ta)))+' ('+sign(tc)+') Today';
     pill.className='today-pill '+cls(tc);
     const tr=document.getElementById('total-ret');
     tr.textContent=sign(safeNum(d.total_ret));
@@ -527,13 +625,10 @@ async function fetchData(){
     document.getElementById('error-msg').style.display='none';
     renderPerfChart(d.chart);
     renderHoldingsTableOv(d.holdings);
-
-    // Render current active page if not overview
     const activePage=document.querySelector('.page.active').id.replace('page-','');
     if(activePage==='holdings')renderHoldingsPage(d);
     if(activePage==='analytics')renderAnalyticsPage(d);
     if(activePage==='history')renderHistoryPage(d);
-
   }catch(err){
     const e=document.getElementById('error-msg');
     e.style.display='block';
