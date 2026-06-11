@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -150,6 +150,95 @@ def get_data():
 @app.route("/")
 def index():
     return render_template("index.html")
+
+STAT_KEYS = [
+    "currentPrice", "marketCap", "trailingPE",
+    "fiftyTwoWeekHigh", "fiftyTwoWeekLow", "volume",
+]
+
+def _extract_close(df):
+    close = df["Close"]
+    if isinstance(close, pd.DataFrame):
+        close = close.iloc[:, 0]
+    return close.dropna()
+
+def _safe_float(val):
+    if val is None:
+        return None
+    try:
+        f = float(val)
+        return None if np.isnan(f) else round(f, 2)
+    except (TypeError, ValueError):
+        return None
+
+def _get_usd_inr_rate():
+    fx = yf.download("USDINR=X", period="5d", auto_adjust=True, progress=False)
+    if fx.empty:
+        return None
+    close = _extract_close(fx)
+    return round(float(close.iloc[-1]), 4) if len(close) else None
+
+def get_market_data(ticker):
+    end   = datetime.today()
+    start = end - timedelta(days=365)
+
+    raw = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)
+    if raw.empty:
+        raise ValueError(f"No price data found for {ticker}")
+
+    close = _extract_close(raw)
+    if close.empty:
+        raise ValueError(f"No price data found for {ticker}")
+
+    try:
+        info = yf.Ticker(ticker).info or {}
+    except Exception:
+        info = {}
+
+    stats = {key: _safe_float(info.get(key)) for key in STAT_KEYS}
+    currency  = info.get("currency")
+    short_name = info.get("shortName")
+
+    result = {
+        "ticker":       ticker,
+        "shortName":    short_name,
+        "currency":     currency,
+        "stats":        stats,
+        "priceHistory": {
+            "dates": [d.strftime("%Y-%m-%d") for d in close.index],
+            "close": to_list(close),
+        },
+    }
+
+    if currency == "USD":
+        rate = _get_usd_inr_rate()
+        if rate is not None:
+            result["usdInrRate"] = rate
+            result["statsInr"] = {
+                key: round(val * rate, 2) if val is not None else None
+                for key, val in stats.items()
+            }
+            result["priceHistoryInr"] = {
+                "dates": result["priceHistory"]["dates"],
+                "close": [round(p * rate, 2) if p is not None else None
+                          for p in result["priceHistory"]["close"]],
+            }
+
+    return result
+
+@app.route("/api/market")
+def api_market():
+    ticker = request.args.get("ticker", "").strip().upper()
+    if not ticker:
+        return jsonify({"status": "error", "message": "Missing ticker parameter"}), 400
+
+    try:
+        data = get_market_data(ticker)
+        return jsonify({"status": "ok", **data})
+    except ValueError as e:
+        return jsonify({"status": "error", "message": str(e)}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/api/data")
 def api_data():
