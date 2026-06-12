@@ -10,6 +10,9 @@ app = Flask(__name__)
 _cache = {"data": None, "ts": 0}
 CACHE_TTL = 55  # seconds
 
+_market_cache = {}
+MARKET_CACHE_TTL = 60  # seconds
+
 HOLDINGS = {
     "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",   "sector": "Infrastructure"},
     "TMPV.NS": {"shares": 10,  "name": "Tata Motors PV",   "sector": "Automotive"},
@@ -232,8 +235,14 @@ def api_market():
     if not ticker:
         return jsonify({"status": "error", "message": "Missing ticker parameter"}), 400
 
+    now = time.time()
+    cached = _market_cache.get(ticker)
+    if cached is not None and (now - cached["ts"]) < MARKET_CACHE_TTL:
+        return jsonify({"status": "ok", **cached["data"]})
+
     try:
         data = get_market_data(ticker)
+        _market_cache[ticker] = {"data": data, "ts": now}
         return jsonify({"status": "ok", **data})
     except ValueError as e:
         return jsonify({"status": "error", "message": str(e)}), 404
