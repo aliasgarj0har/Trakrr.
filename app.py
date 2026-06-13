@@ -181,6 +181,12 @@ def _get_usd_inr_rate():
     close = _extract_close(fx)
     return round(float(close.iloc[-1]), 4) if len(close) else None
 
+def _default_currency(ticker):
+    upper = ticker.upper()
+    if upper.endswith(".NS") or upper.endswith(".BO"):
+        return "INR"
+    return "USD"
+
 def get_market_data(ticker):
     end   = datetime.today()
     start = end - timedelta(days=365)
@@ -199,8 +205,15 @@ def get_market_data(ticker):
         info = {}
 
     stats = {key: _safe_float(info.get(key)) for key in STAT_KEYS}
-    currency  = info.get("currency")
-    short_name = info.get("shortName")
+    if stats["currentPrice"] is None:
+        stats["currentPrice"] = _safe_float(close.iloc[-1])
+    if stats["fiftyTwoWeekHigh"] is None:
+        stats["fiftyTwoWeekHigh"] = _safe_float(close.max())
+    if stats["fiftyTwoWeekLow"] is None:
+        stats["fiftyTwoWeekLow"] = _safe_float(close.min())
+
+    short_name = info.get("shortName") or ticker
+    currency   = info.get("currency") or _default_currency(ticker)
 
     result = {
         "ticker":       ticker,
