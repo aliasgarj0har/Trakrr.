@@ -2,3 +2,4 @@ flask
 yfinance
 pandas
 gunicorn
+flask-cors==6.0.5
