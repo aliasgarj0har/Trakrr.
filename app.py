@@ -127,7 +127,7 @@ def get_data():
         weight    = (value / end_val) * 100
         price_disp = f"${col.iloc[-1]:,.1f}" if ticker in ["AMZN", "AAPL"] else f"₹{col.iloc[-1]:,.1f}"
         holdings_data.append({
-            "ticker":    ticker.replace(".NS", ",
+            "ticker":    ticker.replace(".NS", ""),
             "name":      info["name"],
             "sector":    info["sector"],
             "price":     price_disp,
