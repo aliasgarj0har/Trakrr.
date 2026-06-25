@@ -15,48 +15,15 @@ CORS(app, origins=_origins or "*", supports_credentials=False)
 
 _cache = {"data": None, "ts": 0}
 CACHE_TTL = 55
-
 _market_cache = {}
 MARKET_CACHE_TTL = 60
 
 HOLDINGS = {
-    "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",        "sector": "Infrastructure"},
-    "TMPV.NS":       {"shares": 10, "name": "Tata Motors PV",     "sector": "Automotive"},
-    "ETERNAL.NS":    {"shares": 15, "name": "Eternal (Zomato)",   "sector": "Consumer Tech"},
-    "AMZN":          {"shares": 2,  "name": "Amazon",             "sector": "Global Tech"},
-    "AAPL":          {"shares": 5,  "name": "Apple",              "sector": "Global Tech"},
-}
-
-START_DATE = "2026-01-01"
-BE
-cat > /Users/aliasgarjohar/Cursor/Trackrr/app.py << 'ENDOFFILE'
-from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS
-import yfinance as yf
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
-import time
-import os
-
-app = Flask(__name__)
-
-_frontend = os.environ.get("FRONTEND_URL", "")
-_origins = [o for o in [_frontend, "http://localhost:3000"] if o]
-CORS(app, origins=_origins or "*", supports_credentials=False)
-
-_cache = {"data": None, "ts": 0}
-CACHE_TTL = 55
-
-_market_cache = {}
-MARKET_CACHE_TTL = 60
-
-HOLDINGS = {
-    "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",        "sector": "Infrastructure"},
-    "TMPV.NS":       {"shares": 10, "name": "Tata Motors PV",     "sector": "Automotive"},
-    "ETERNAL.NS":    {"shares": 15, "name": "Eternal (Zomato)",   "sector": "Consumer Tech"},
-    "AMZN":          {"shares": 2,  "name": "Amazon",             "sector": "Global Tech"},
-    "AAPL":          {"shares": 5,  "name": "Apple",              "sector": "Global Tech"},
+    "ADANIPORTS.NS": {"shares": 3,  "name": "Adani Ports",      "sector": "Infrastructure"},
+    "TMPV.NS":       {"shares": 10, "name": "Tata Motors PV",   "sector": "Automotive"},
+    "ETERNAL.NS":    {"shares": 15, "name": "Eternal (Zomato)", "sector": "Consumer Tech"},
+    "AMZN":          {"shares": 2,  "name": "Amazon",           "sector": "Global Tech"},
+    "AAPL":          {"shares": 5,  "name": "Apple",            "sector": "Global Tech"},
 }
 
 START_DATE = "2026-01-01"
@@ -64,10 +31,7 @@ BENCHMARK  = "^NSEI"
 BENCHMARK2 = "^GSPC"
 
 def to_list(series):
-    return [
-        None if (v is None or (isinstance(v, float) and np.isnan(v))) else round(float(v), 2)
-        for v in series
-    ]
+    return [None if (v is None or (isinstance(v, float) and np.isnan(v))) else round(float(v), 2) for v in series]
 
 def get_data():
     start   = pd.Timestamp(START_DATE)
@@ -80,7 +44,7 @@ def get_data():
     sp500  = prices[BENCHMARK2].dropna()
     stocks = prices.drop(columns=[BENCHMARK, BENCHMARK2])
     usd_inr = yf.download("USDINR=X", start=start, end=end, auto_adjust=True, progress=False)
-    fx      = usd_inr["Close"].dropna() if isinstance(usd_inr.columns, pd.MultiIndex) else usd_inr[["Close"]]
+    fx = usd_inr["Close"].dropna() if isinstance(usd_inr.columns, pd.MultiIndex) else usd_inr[["Close"]]
     if isinstance(fx, pd.DataFrame):
         fx = fx.iloc[:, 0]
     port_value = pd.Series(0.0, index=stocks.index)
@@ -118,14 +82,14 @@ def get_data():
         col = stocks[ticker].dropna()
         if ticker in ["AMZN", "AAPL"]:
             fx_aligned = fx.reindex(col.index, method="ffill")
-            col_inr    = col * fx_aligned
+            col_inr = col * fx_aligned
         else:
             col_inr = col
         ret       = (float(col_inr.iloc[-1]) - float(col_inr.iloc[0])) / float(col_inr.iloc[0]) * 100
         today_ret = float(col_inr.pct_change().iloc[-1]) * 100
         value     = float(col_inr.iloc[-1]) * info["shares"]
         weight    = (value / end_val) * 100
-        price_disp = f"${col.iloc[-1]:,.1f}" if ticker in ["AMZN", "AAPL"] else f"₹{col.iloc[-1]:,.1f}"
+        price_disp = f"${col.iloc[-1]:,.1f}" if ticker in ["AMZN", "AAPL"] else f"{col.iloc[-1]:,.1f}"
         holdings_data.append({
             "ticker":    ticker.replace(".NS", ""),
             "name":      info["name"],
@@ -138,8 +102,8 @@ def get_data():
             "shares":    info["shares"],
         })
     port_norm  = port_value / port_value.iloc[0] * 100
-    nifty_norm = (nifty  / nifty.iloc[0]  * 100).reindex(port_norm.index)
-    sp500_norm = (sp500  / sp500.iloc[0]  * 100).reindex(port_norm.index)
+    nifty_norm = (nifty / nifty.iloc[0] * 100).reindex(port_norm.index)
+    sp500_norm = (sp500 / sp500.iloc[0] * 100).reindex(port_norm.index)
     chart_dates = [d.strftime("%d %b '%y") for d in port_norm.index]
     today_change = 0
     today_change_abs = 0
@@ -151,8 +115,7 @@ def get_data():
                 tca = end_val * tc / 100
                 today_change_abs = 0 if np.isnan(tca) else tca
     except Exception:
-        today_change = 0
-        today_change_abs = 0
+        pass
     return {
         "updated_at":       datetime.now().strftime("%H:%M:%S"),
         "start_date":       start.strftime("%d %b %Y"),
@@ -247,10 +210,7 @@ def get_market_data(ticker):
         rate = _get_usd_inr_rate()
         if rate is not None:
             result["usdInrRate"] = rate
-            result["statsInr"] = {
-                key: round(val * rate, 2) if val is not None else None
-                for key, val in stats.items()
-            }
+            result["statsInr"] = {key: round(val * rate, 2) if val is not None else None for key, val in stats.items()}
             result["priceHistoryInr"] = {
                 "dates": result["priceHistory"]["dates"],
                 "close": [round(p * rate, 2) if p is not None else None for p in result["priceHistory"]["close"]],
