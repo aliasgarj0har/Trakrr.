@@ -5,18 +5,46 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Download } from "lucide-react";
+import type { FlaskHolding } from "@/types";
+
+function exportCSV(holdings: FlaskHolding[], endVal: number) {
+  const headers = ["Ticker", "Name", "Sector", "Shares", "Price", "Value (INR)", "Weight (%)", "Today (%)", "Total Return (%)"];
+  const rows = holdings.map((h) => [
+    h.ticker, h.name, h.sector, h.shares, h.price,
+    h.value, h.weight, h.today_ret, h.total_ret,
+  ]);
+  const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `trackrr-holdings-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export default function HoldingsPage() {
   const { data, loading } = usePortfolio();
 
   return (
     <div className="p-6 md:p-10 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-beige tracking-tight">Holdings</h1>
-        <p className="text-beige/40 text-sm mt-1">
-          {data ? `${data.holdings.length} positions · Total ${formatCurrency(data.end_val)}` : "Loading..."}
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-beige tracking-tight">Holdings</h1>
+          <p className="text-beige/40 text-sm mt-1">
+            {data ? `${data.holdings.length} positions · Total ${formatCurrency(data.end_val)}` : "Loading..."}
+          </p>
+        </div>
+        {data && (
+          <button
+            onClick={() => exportCSV(data.holdings, data.end_val)}
+            className="flex items-center gap-2 glass rounded-lg px-3 py-2 text-xs text-beige/60 hover:text-beige transition-colors"
+          >
+            <Download size={13} />
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Desktop table */}
@@ -53,7 +81,6 @@ export default function HoldingsPage() {
                         <Badge variant="muted">{h.sector}</Badge>
                       </td>
                       <td className="px-5 py-4 text-beige/70">{h.shares}</td>
-                      {/* Flask gives pre-formatted price strings like "₹1234.5" or "$185.0" */}
                       <td className="px-5 py-4 text-beige/80 font-mono text-xs">{h.price}</td>
                       <td className="px-5 py-4 text-beige font-semibold">{formatCurrency(h.value)}</td>
                       <td className="px-5 py-4">
