@@ -1,5 +1,6 @@
 "use client";
 
+import { NewsFeed } from "@/components/news-feed";
 import { motion } from "framer-motion";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { StatCard } from "@/components/ui/stat-card";
@@ -168,6 +169,7 @@ export default function OverviewPage() {
       {data?.updated_at && (
         <p className="text-beige/20 text-xs text-right">Updated {data.updated_at}</p>
       )}
+      <NewsFeed />
     </div>
   );
 }
